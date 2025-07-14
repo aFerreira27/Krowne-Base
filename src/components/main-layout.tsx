@@ -15,8 +15,8 @@ import {
   SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Home, Package, BarChart2, PanelLeft } from 'lucide-react';
+import { Home, Package, BarChart2 } from 'lucide-react';
+import { ClientOnly } from './client-only';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -24,7 +24,7 @@ const navItems = [
   { href: '/status', label: 'DB Status', icon: BarChart2 },
 ];
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
@@ -74,4 +74,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </SidebarInset>
     </SidebarProvider>
   );
+}
+
+
+export function MainLayout({ children }: { children: React.ReactNode }) {
+  return <ClientOnly><Layout>{children}</Layout></ClientOnly>;
 }
