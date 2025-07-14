@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,10 +6,10 @@ import { CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { Button } from './ui/button';
 
 const databases = [
-  { name: 'ERP System', inSync: true },
-  { name: 'CRM Database', inSync: true },
-  { name: 'E-commerce Platform', inSync: false },
-  { name: 'Warehouse Management', inSync: true },
+  { name: 'Salespad', inSync: true },
+  { name: 'Pimly', inSync: true },
+  { name: 'AutoQuotes', inSync: false },
+  { name: 'Krowne.com', inSync: true },
 ];
 
 export function StatusList() {
