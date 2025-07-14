@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Home, Package, BarChart2, PanelLeft } from 'lucide-react';
-import { KrowneLogo } from './icons/krowne-logo';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -32,8 +31,21 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-2">
-            <KrowneLogo className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10" />
+          <div className="flex items-center justify-center p-2">
+            <Image
+              src="https://cdn.ckitchen.com/img/brands/464b22b9-5162-4709-b5a4-c672841b2307/krowne-logo-250618mftv5w.png"
+              alt="Krowne Logo"
+              width={120}
+              height={40}
+              className="w-auto h-8 group-data-[collapsible=icon]:hidden"
+            />
+             <Image
+              src="https://cdn.ckitchen.com/img/brands/464b22b9-5162-4709-b5a4-c672841b2307/krowne-logo-250618mftv5w.png"
+              alt="Krowne Logo"
+              width={40}
+              height={40}
+              className="w-auto h-8 hidden group-data-[collapsible=icon]:block"
+            />
           </div>
         </SidebarHeader>
         <SidebarContent>
