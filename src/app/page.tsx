@@ -13,8 +13,8 @@ export default function Home() {
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
         <div className="flex items-center gap-x-2">
           <Image
-            src="https://krowne.com/images/Logo.svg"
-            alt="Krowne Logo"
+            src="/images/krowne_logo.png"
+            alt="Krowne"
             width={240}
             height={80}
             className="w-auto h-20 md:h-16"
