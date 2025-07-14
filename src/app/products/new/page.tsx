@@ -36,6 +36,17 @@ const productSchema = z.object({
   compliance: z.array(complianceSchema),
 });
 
+// Helper to check for a valid URL
+const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+
 export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -150,19 +161,11 @@ export default function NewProductPage() {
                         {watchedImages?.[index]?.url && (
                           <div className="relative aspect-video rounded-md overflow-hidden border">
                             <Image
-                              src={watchedImages[index].url}
+                              src={isValidUrl(watchedImages[index].url) ? watchedImages[index].url : 'https://placehold.co/600x400.png'}
                               alt={`Product image preview ${index + 1}`}
                               fill
                               className="object-cover"
                               data-ai-hint="product photo"
-                              onError={(e) => {
-                                const target = e.target as HTMLElement;
-                                target.parentElement!.style.display = 'none';
-                              }}
-                              onLoad={(e) => {
-                                const target = e.target as HTMLElement;
-                                target.parentElement!.style.display = 'block';
-                              }}
                             />
                           </div>
                         )}
