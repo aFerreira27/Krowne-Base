@@ -35,10 +35,11 @@ export function Header() {
             key={item.href}
             href={item.href}
             className={cn(
-                "transition-colors hover:text-foreground",
-                pathname === item.href ? "text-foreground" : "text-muted-foreground"
+                "flex items-center gap-2 transition-colors hover:text-foreground",
+                pathname.startsWith(item.href) ? "text-foreground" : "text-muted-foreground"
             )}
           >
+            <item.icon className="h-4 w-4" />
             {item.label}
           </Link>
         ))}
@@ -62,24 +63,16 @@ export function Header() {
                 />
               <span className="sr-only">Krowne Home</span>
             </Link>
-            <Link
-                href="/"
-                className={cn(
-                    "transition-colors hover:text-foreground",
-                    pathname === "/" ? "text-foreground" : "text-muted-foreground"
-                )}
-            >
-                Home
-            </Link>
             {navItems.map((item) => (
                 <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                    "transition-colors hover:text-foreground",
-                    pathname === item.href ? "text-foreground" : "text-muted-foreground"
+                    "flex items-center gap-4 transition-colors hover:text-foreground",
+                    pathname.startsWith(item.href) ? "text-foreground" : "text-muted-foreground"
                 )}
               >
+                <item.icon className="h-5 w-5" />
                 {item.label}
               </Link>
             ))}
