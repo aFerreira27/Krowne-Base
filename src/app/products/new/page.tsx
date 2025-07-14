@@ -15,6 +15,7 @@ import { Trash, Plus, Upload } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
