@@ -31,7 +31,7 @@ const specSchema = z.object({
 
 const docSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  url: z.string().url('Must be a valid URL'),
+  url: z.string().url('Must be a valid URL or Data URI'),
 });
 
 const complianceSchema = z.object({
@@ -53,7 +53,7 @@ const productSchema = z.object({
 // Helper to check for a valid URL or Data URI
 const isValidUrl = (url: string) => {
   if (!url) return false;
-  if (url.startsWith('data:image/')) return true;
+  if (url.startsWith('data:')) return true;
   try {
     new URL(url);
     return true;
@@ -68,6 +68,7 @@ export default function NewProductPage() {
   const { toast } = useToast();
   const [isDragging, setIsDragging] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const docFileInputRefs = React.useRef<(HTMLInputElement | null)[]>([]);
 
 
   const form = useForm<z.infer<typeof productSchema>>({
@@ -95,7 +96,7 @@ export default function NewProductPage() {
     name: "specifications"
   });
 
-  const { fields: docFields, append: appendDoc, remove: removeDoc } = useFieldArray({
+  const { fields: docFields, append: appendDoc, remove: removeDoc, update: updateDoc } = useFieldArray({
     control: form.control,
     name: "documentation"
   });
@@ -107,7 +108,7 @@ export default function NewProductPage() {
 
   const watchedImages = form.watch('images');
   
-  const processFiles = (files: File[]) => {
+  const processImageFiles = (files: File[]) => {
     files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -124,6 +125,26 @@ export default function NewProductPage() {
       };
       reader.readAsDataURL(file);
     });
+  };
+
+  const handleDocFileSelect = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          updateDoc(index, { name: file.name, url: reader.result });
+        }
+      };
+      reader.onerror = () => {
+        toast({
+          variant: 'destructive',
+          title: 'File Read Error',
+          description: `Could not read the file: ${file.name}`,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -151,14 +172,14 @@ export default function NewProductPage() {
     const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
 
     if (files.length > 0) {
-      processFiles(files);
+      processImageFiles(files);
     }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []).filter(file => file.type.startsWith('image/'));
      if (files.length > 0) {
-      processFiles(files);
+      processImageFiles(files);
     }
   };
   
@@ -399,9 +420,9 @@ export default function NewProductPage() {
               <div>
                 <h3 className="text-lg font-medium mb-4">Documentation</h3>
                 <div className="border rounded-md p-4 space-y-4">
-                  <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                   <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
                     <Label>Document Name</Label>
-                    <Label>URL</Label>
+                    <Label>File</Label>
                     <div/>
                   </div>
                   {docFields.map((field, index) => (
@@ -419,19 +440,34 @@ export default function NewProductPage() {
                           </FormItem>
                         )}
                       />
-                      <FormField
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => docFileInputRefs.current[index]?.click()}
+                        >
+                          <Upload className="mr-2 h-4 w-4" />
+                          Upload
+                        </Button>
+                         <FormField
                           control={form.control}
                           name={`documentation.${index}.url`}
                           render={({ field }) => (
-                              <FormItem>
-                                  <FormLabel className="sr-only">URL</FormLabel>
-                                  <FormControl>
-                                  <Input {...field} placeholder='e.g., https://example.com/spec.pdf' />
-                                  </FormControl>
-                                  <FormMessage />
-                              </FormItem>
+                            <FormItem>
+                                <FormLabel className="sr-only">File</FormLabel>
+                                <FormControl>
+                                <input
+                                  type="file"
+                                  ref={el => docFileInputRefs.current[index] = el}
+                                  className="hidden"
+                                  onChange={(e) => handleDocFileSelect(e, index)}
+                                />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
                           )}
-                      />
+                        />
+                      </div>
                       <Button
                           type="button"
                           variant="destructive"
