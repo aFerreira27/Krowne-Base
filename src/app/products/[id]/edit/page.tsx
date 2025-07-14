@@ -408,6 +408,7 @@ export default function EditProductPage() {
                           variant="destructive"
                           size="icon"
                           onClick={() => removeSpec(index)}
+                          className="self-start"
                       >
                           <Trash className="h-4 w-4" />
                       </Button>
@@ -490,6 +491,7 @@ export default function EditProductPage() {
                           variant="destructive"
                           size="icon"
                           onClick={() => removeDoc(index)}
+                          className="self-start"
                       >
                           <Trash className="h-4 w-4" />
                       </Button>
@@ -533,6 +535,7 @@ export default function EditProductPage() {
                         variant="destructive"
                         size="icon"
                         onClick={() => removeCompliance(index)}
+                        className="self-start"
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
