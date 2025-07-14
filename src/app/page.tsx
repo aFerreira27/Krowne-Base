@@ -1,6 +1,9 @@
 import { HomeSearch } from '@/components/home-search';
 import { RecentlyViewedSection } from '@/components/recently-viewed-section';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -29,7 +32,16 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
+      <div className="flex justify-center">
+        <Link href="/products/new" passHref>
+          <Button variant="outline" size="lg">
+            <Plus className="mr-2" />
+            Add New Product
+          </Button>
+        </Link>
+      </div>
+
       <RecentlyViewedSection />
     </div>
   );
