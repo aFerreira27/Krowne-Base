@@ -31,10 +31,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <span className="font-headline text-lg font-semibold group-data-[collapsible=icon]:hidden">
-              Krowne
-            </span>
+          <div className="flex items-center gap-2 px-2">
+            <KrowneLogo className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10" />
           </div>
         </SidebarHeader>
         <SidebarContent>
