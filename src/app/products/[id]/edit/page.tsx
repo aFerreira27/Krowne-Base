@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound, useParams, useRouter } from 'next/navigation';
@@ -11,7 +12,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash } from 'lucide-react';
+import { Trash, Plus, Upload } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
+
+const imageSchema = z.object({
+  url: z.string().url('Must be a valid URL or Data URI'),
+});
 
 const specSchema = z.object({
   key: z.string().min(1, 'Key is required'),
@@ -23,13 +32,32 @@ const docSchema = z.object({
   url: z.string().url('Must be a valid URL'),
 });
 
+const complianceSchema = z.object({
+  name: z.string().min(1, 'Compliance name is required'),
+});
+
 const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   sku: z.string().min(1, 'SKU is required'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
+  description: z.string().optional(),
+  standardFeatures: z.string().optional(),
+  images: z.array(imageSchema).min(1, 'At least one image is required'),
   specifications: z.array(specSchema),
   documentation: z.array(docSchema),
+  compliance: z.array(complianceSchema),
 });
+
+// Helper to check for a valid URL or Data URI
+const isValidUrl = (url: string) => {
+  if (!url) return false;
+  if (url.startsWith('data:image/')) return true;
+  try {
+    new URL(url);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
 
 export default function EditProductPage() {
   const params = useParams();
@@ -37,6 +65,8 @@ export default function EditProductPage() {
   const { toast } = useToast();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const product = getProductById(id);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -44,11 +74,19 @@ export default function EditProductPage() {
       name: product?.name || '',
       sku: product?.sku || '',
       description: product?.description || '',
+      standardFeatures: product?.standardFeatures || '',
+      images: product?.images?.map(url => ({ url })) || [],
       specifications: product?.specifications || [],
       documentation: product?.documentation || [],
+      compliance: product?.compliance || [],
     },
   });
   
+  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+    control: form.control,
+    name: "images"
+  });
+
   const { fields: specFields, append: appendSpec, remove: removeSpec } = useFieldArray({
     control: form.control,
     name: "specifications"
@@ -59,16 +97,82 @@ export default function EditProductPage() {
     name: "documentation"
   });
 
+  const { fields: complianceFields, append: appendCompliance, remove: removeCompliance } = useFieldArray({
+    control: form.control,
+    name: "compliance"
+  });
+
+  const watchedImages = form.watch('images');
 
   if (!product) {
     notFound();
   }
+  
+  const processFiles = (files: File[]) => {
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          appendImage({ url: reader.result });
+        }
+      };
+      reader.onerror = () => {
+        toast({
+          variant: 'destructive',
+          title: 'File Read Error',
+          description: `Could not read the file: ${file.name}`,
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+
+    if (files.length > 0) {
+      processFiles(files);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []).filter(file => file.type.startsWith('image/'));
+     if (files.length > 0) {
+      processFiles(files);
+    }
+  };
+  
+  const onDropZoneClick = () => {
+    fileInputRef.current?.click();
+  };
+
 
   function onSubmit(values: z.infer<typeof productSchema>) {
     console.log('Updated product data:', values);
     toast({
       title: "Product Updated",
-      description: `${values.name} has been saved successfully. PDF spec sheet regeneration initiated.`,
+      description: `${values.name} has been saved successfully.`,
     });
     router.push(`/products/${id}`);
   }
@@ -112,6 +216,78 @@ export default function EditProductPage() {
                 />
               </div>
 
+              <div>
+                <h3 className="text-lg font-medium mb-4">Product Photos</h3>
+                <Card>
+                  <CardContent className="p-4 space-y-4">
+                     <div
+                      onClick={onDropZoneClick}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragEnter={handleDragEnter}
+                      onDragLeave={handleDragLeave}
+                      className={cn(
+                        "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out cursor-pointer",
+                        isDragging ? "border-primary bg-accent" : "border-border hover:border-primary/50"
+                      )}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileSelect}
+                      />
+                      <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
+                        <Upload className="h-8 w-8" />
+                        <p className="font-medium">
+                          {isDragging ? 'Drop images here' : 'Drag & drop images, or click to select files'}
+                        </p>
+                        <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
+                      </div>
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={() => (
+                        <FormItem>
+                          {imageFields.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                              {imageFields.map((field, index) => (
+                                <div key={field.id} className="group relative aspect-square">
+                                  {isValidUrl(watchedImages?.[index]?.url) ? (
+                                    <Image
+                                      src={watchedImages[index].url}
+                                      alt={`Product image preview ${index + 1}`}
+                                      fill
+                                      className="object-cover rounded-md border"
+                                      data-ai-hint="product photo"
+                                    />
+                                  ) : (
+                                     <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
+                                      <span className="text-xs text-muted-foreground">Invalid URL</span>
+                                     </div>
+                                  )}
+                                   <button
+                                      type="button"
+                                      onClick={() => removeImage(index)}
+                                      className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      <Trash className="h-3 w-3" />
+                                    </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                     />
+                  </CardContent>
+                </Card>
+              </div>
+
               <FormField
                 control={form.control}
                 name="description"
@@ -126,70 +302,176 @@ export default function EditProductPage() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="standardFeatures"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Standard Features</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="List the standard features of the product..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div>
                 <h3 className="text-lg font-medium mb-4">Specifications</h3>
-                {specFields.map((field, index) => (
-                    <div key={field.id} className="flex gap-4 items-end mb-4 p-4 border rounded-md">
-                        <FormField
-                            control={form.control}
-                            name={`specifications.${index}.key`}
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <FormLabel>Key</FormLabel>
-                                    <FormControl><Input {...field} placeholder="Material" /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`specifications.${index}.value`}
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <FormLabel>Value</FormLabel>
-                                    <FormControl><Input {...field} placeholder="Stainless Steel" /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button type="button" variant="destructive" size="icon" onClick={() => removeSpec(index)}><Trash className="h-4 w-4" /></Button>
+                <div className="border rounded-md p-4 space-y-4">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                    <Label>Key</Label>
+                    <Label>Value</Label>
+                    <div/>
+                  </div>
+                  {specFields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                      <FormField
+                        control={form.control}
+                        name={`specifications.${index}.key`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="sr-only">Key</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., Width" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                          control={form.control}
+                          name={`specifications.${index}.value`}
+                          render={({ field }) => (
+                              <FormItem>
+                                  <FormLabel className="sr-only">Value</FormLabel>
+                                  <FormControl>
+                                  <Input {...field} placeholder='e.g., 84"' />
+                                  </FormControl>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                      />
+                      <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removeSpec(index)}
+                      >
+                          <Trash className="h-4 w-4" />
+                      </Button>
                     </div>
-                ))}
-                <Button type="button" variant="outline" onClick={() => appendSpec({ key: '', value: '' })}>Add Specification</Button>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendSpec({ key: '', value: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Specification
+                  </Button>
+                </div>
               </div>
 
               <div>
                 <h3 className="text-lg font-medium mb-4">Documentation</h3>
-                {docFields.map((field, index) => (
-                    <div key={field.id} className="flex gap-4 items-end mb-4 p-4 border rounded-md">
-                        <FormField
-                            control={form.control}
-                            name={`documentation.${index}.name`}
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl><Input {...field} placeholder="Spec Sheet" /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`documentation.${index}.url`}
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <FormLabel>URL</FormLabel>
-                                    <FormControl><Input {...field} placeholder="https://example.com/doc.pdf" /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button type="button" variant="destructive" size="icon" onClick={() => removeDoc(index)}><Trash className="h-4 w-4" /></Button>
+                <div className="border rounded-md p-4 space-y-4">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                    <Label>Document Name</Label>
+                    <Label>URL</Label>
+                    <div/>
+                  </div>
+                  {docFields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                      <FormField
+                        control={form.control}
+                        name={`documentation.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="sr-only">Document Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., Spec Sheet" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                          control={form.control}
+                          name={`documentation.${index}.url`}
+                          render={({ field }) => (
+                              <FormItem>
+                                  <FormLabel className="sr-only">URL</FormLabel>
+                                  <FormControl>
+                                  <Input {...field} placeholder='e.g., https://example.com/spec.pdf' />
+                                  </FormControl>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                      />
+                      <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removeDoc(index)}
+                      >
+                          <Trash className="h-4 w-4" />
+                      </Button>
                     </div>
-                ))}
-                <Button type="button" variant="outline" onClick={() => appendDoc({ name: '', url: '' })}>Add Document</Button>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendDoc({ name: '', url: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Document
+                  </Button>
+                </div>
               </div>
 
+              <div>
+                <h3 className="text-lg font-medium mb-4">Compliance</h3>
+                <div className="border rounded-md p-4 space-y-4">
+                   <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
+                    <Label>Certification</Label>
+                    <div/>
+                   </div>
+                  {complianceFields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
+                      <FormField
+                        control={form.control}
+                        name={`compliance.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="sr-only">Certification</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., NSF Certified" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => removeCompliance(index)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                   <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendCompliance({ name: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Compliance
+                  </Button>
+                </div>
+              </div>
 
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="ghost" onClick={() => router.back()}>Cancel</Button>
