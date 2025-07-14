@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Download, Edit, FileText } from 'lucide-react';
+import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -88,9 +88,10 @@ export default function ProductDetailPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="specs">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="specs">Specifications</TabsTrigger>
                 <TabsTrigger value="docs">Documentation</TabsTrigger>
+                <TabsTrigger value="compliance">Compliance</TabsTrigger>
               </TabsList>
               <TabsContent value="specs" className="mt-4">
                 <Table>
@@ -123,10 +124,33 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
               </TabsContent>
+               <TabsContent value="compliance" className="mt-4">
+                <div className="space-y-2">
+                  {(product.compliance || []).map((c) => (
+                     <div key={c.name} className="flex items-center p-3 rounded-md border">
+                        <ShieldCheck className="h-5 w-5 mr-3 text-muted-foreground" />
+                        <span>{c.name}</span>
+                      </div>
+                  ))}
+                </div>
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
       </div>
+
+       {product.standardFeatures && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Standard Features</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
+              {product.standardFeatures}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {product.images.length > 0 && (
         <div>
