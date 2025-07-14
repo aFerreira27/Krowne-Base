@@ -8,11 +8,12 @@ This application serves as a hub for managing and displaying Krowne product info
 *   **React:** A JavaScript library for building user interfaces.
 *   **TypeScript:** A typed superset of JavaScript that compiles to plain JavaScript. It provides static type checking to help catch errors early.
 *   **PostgreSQL:** A powerful, open-source object-relational database system used for storing product data.
+*   **Cloud SQL for PostgreSQL:** Google Cloud's managed database service for PostgreSQL, used to host the product data.
 *   **Firebase App Hosting:** A hosting solution optimized for Next.js applications, handling server-side rendering and static asset serving.
 
 ## Database Storage
 
-Product data is stored in a PostgreSQL database. While the specific hosting for the PostgreSQL instance might be managed separately (potentially within Google Cloud Platform or a service like Neon Database), the application interacts with it using a PostgreSQL client library to perform standard database operations (inserting, retrieving, updating, and deleting data).
+Product data is stored in a PostgreSQL database. While the specific hosting for the PostgreSQL instance might be managed separately within Google Cloud Platform, the application interacts with it using a PostgreSQL client library to perform standard database operations (inserting, retrieving, updating, and deleting data).
 
 
 ## Language Usage
