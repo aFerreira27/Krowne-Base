@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -26,7 +27,8 @@ export function ProductSearch() {
       <Input
         type="search"
         placeholder="Search by SKU, name, or keyword..."
-        className="pl-10 h-11 text-base border-x-0 border-t-0 border-b rounded-none focus:outline-none focus-visible:outline-none focus-visible:ring-0"        defaultValue={searchParams.get('q')?.toString()}
+        className="pl-10 h-11 text-base border-x-0 border-t-0 border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+        defaultValue={searchParams.get('q')?.toString()}
         onChange={e => handleSearch(e.target.value)}
       />
     </div>
