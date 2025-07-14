@@ -8,13 +8,29 @@ runConfig:
   # memoryMiB: 512
 
 # Environment variables and secrets.
-# env:
+env:
   # Configure environment variables.
   # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
-  # - variable: MESSAGE
-  #   value: Hello world!
+  - variable: INSTANCE_CONNECTION_NAME
+    value: spring-radar-383220:us-central1:krownebase-1
+    availability:
+      - RUNTIME
+  - variable: DB_USER
+    value: KrowneBaseAdmin
+    availability:
+      - RUNTIME
+  - variable: DB_PASS
+    value: KrowneAdmin123
+    availability:
+      - RUNTIME
+  - variable: DB_NAME
+    value: krownebase-1
+    availability:
+      - RUNTIME
+  # Optional: Uncomment and set if you are using private IP
+  # - variable: PRIVATE_IP
+  #   value: "true" # or "1"
   #   availability:
-  #     - BUILD
   #     - RUNTIME
 
   # Grant access to secrets in Cloud Secret Manager.

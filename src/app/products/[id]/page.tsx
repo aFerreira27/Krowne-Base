@@ -17,14 +17,14 @@ import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
 export default function ProductDetailPage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const product = getProductById(id);
+  const product = getProductById(id as string);
   const { addProduct } = useRecentlyViewed();
 
   useEffect(() => {
-    if (product) {
+    if (product && id) {
       addProduct(id);
     }
-  }, [id, addProduct]);
+  }, [id, addProduct, product]);
 
   if (!product) {
     notFound();

@@ -1,17 +1,30 @@
 {
   "hosting": {
     "site": "krownebase",
-    "public": "public"
-  },
-  "apphosting": {
-    "backendId": "krownebase",
-    "rootDir": "/",
+    "public": ".next",
     "ignore": [
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log",
-      "functions"
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/server/app/index.html"
+      }
     ]
-  }
+  },
+  "apphosting": [
+    {
+      "backendId": "krownebase",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    }
+  ]
 }

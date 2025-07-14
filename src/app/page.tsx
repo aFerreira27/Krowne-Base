@@ -21,7 +21,7 @@ export default function Home() {
             priority
           />
           <h1 className="font-headline text-4xl md:text-4xl font-bold tracking-tighter">
-            Product Hub
+            Base
           </h1>
         </div>
           <p className="max-w-xl text-lg text-muted-foreground">

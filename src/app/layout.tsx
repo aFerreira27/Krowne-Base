@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/main-layout';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Krowne Product Hub',
+  title: 'Krowne Base',
   description: 'Manage and browse Krowne products with ease.',
 };
 
