@@ -276,36 +276,50 @@ export default function NewProductPage() {
                 <h3 className="text-lg font-medium mb-4">Specifications</h3>
                 <div className="space-y-4">
                   {specFields.map((field, index) => (
-                      <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
-                          <div className="flex-1 grid grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name={`specifications.${index}.key`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Key</FormLabel>
-                                        <FormControl><Input {...field} placeholder="e.g., Width" /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name={`specifications.${index}.value`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Value</FormLabel>
-                                        <FormControl><Input {...field} placeholder='e.g., 84"' /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                          </div>
-                          <Button type="button" variant="destructive" size="icon" onClick={() => removeSpec(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
-                      </div>
+                    <div key={field.id} className="flex gap-4 items-end p-4 border rounded-md">
+                      <FormField
+                        control={form.control}
+                        name={`specifications.${index}.key`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>Key</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., Width" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`specifications.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>Value</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder='e.g., 84"' />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => removeSpec(index)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
                   ))}
                 </div>
-                <Button type="button" variant="outline" onClick={() => appendSpec({ key: '', value: '' })} className="mt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => appendSpec({ key: '', value: '' })}
+                  className="mt-4"
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Specification
                 </Button>
@@ -315,25 +329,37 @@ export default function NewProductPage() {
                 <h3 className="text-lg font-medium mb-4">Compliance</h3>
                 <div className="space-y-4">
                   {complianceFields.map((field, index) => (
-                      <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
-                         <div className="flex-1">
-                            <FormField
-                                control={form.control}
-                                name={`compliance.${index}.name`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Certification</FormLabel>
-                                        <FormControl><Input {...field} placeholder="e.g., NSF Certified" /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                          </div>
-                          <Button type="button" variant="destructive" size="icon" onClick={() => removeCompliance(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
-                      </div>
+                    <div key={field.id} className="flex gap-4 items-end p-4 border rounded-md">
+                      <FormField
+                        control={form.control}
+                        name={`compliance.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>Certification</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., NSF Certified" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => removeCompliance(index)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
                   ))}
                 </div>
-                <Button type="button" variant="outline" onClick={() => appendCompliance({ name: '' })} className="mt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => appendCompliance({ name: '' })}
+                  className="mt-4"
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Compliance
                 </Button>
