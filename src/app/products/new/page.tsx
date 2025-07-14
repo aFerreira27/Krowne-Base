@@ -123,43 +123,57 @@ export default function NewProductPage() {
 
               <div>
                 <h3 className="text-lg font-medium mb-4">Product Photos</h3>
-                <div className="space-y-4">
-                  {imageFields.map((field, index) => (
-                      <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
-                          <div className="flex-1 space-y-4">
+                <Card>
+                  <CardContent className="p-4 space-y-4">
+                    {imageFields.map((field, index) => (
+                      <div key={field.id} className="flex flex-col gap-4 p-4 border rounded-md">
+                        <div className="flex gap-4 items-start">
+                          <div className="flex-1 space-y-2">
                             <FormField
-                                control={form.control}
-                                name={`images.${index}.url`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Image URL</FormLabel>
-                                        <FormControl><Input {...field} placeholder="https://example.com/photo.png" /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
+                              control={form.control}
+                              name={`images.${index}.url`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Image URL</FormLabel>
+                                  <FormControl>
+                                    <Input {...field} placeholder="https://example.com/photo.png" />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
                             />
-                            {watchedImages?.[index]?.url && (
-                                <div className="relative aspect-video rounded-md overflow-hidden border">
-                                    <Image 
-                                        src={watchedImages[index].url}
-                                        alt="Product image preview"
-                                        fill
-                                        className="object-cover"
-                                        data-ai-hint="product photo"
-                                        onError={(e) => e.currentTarget.style.display = 'none'}
-                                        onLoad={(e) => e.currentTarget.style.display = 'block'}
-                                    />
-                                </div>
-                            )}
                           </div>
-                          <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
+                          <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} className="mt-7">
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        {watchedImages?.[index]?.url && (
+                          <div className="relative aspect-video rounded-md overflow-hidden border">
+                            <Image
+                              src={watchedImages[index].url}
+                              alt={`Product image preview ${index + 1}`}
+                              fill
+                              className="object-cover"
+                              data-ai-hint="product photo"
+                              onError={(e) => {
+                                const target = e.target as HTMLElement;
+                                target.parentElement!.style.display = 'none';
+                              }}
+                              onLoad={(e) => {
+                                const target = e.target as HTMLElement;
+                                target.parentElement!.style.display = 'block';
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
-                  ))}
-                </div>
-                <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })} className="mt-4">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Photo
-                </Button>
+                    ))}
+                    <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Photo
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
 
               <FormField
