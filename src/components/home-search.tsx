@@ -23,7 +23,7 @@ export function HomeSearch() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="Search for products..."
+          placeholder="Search by SKU, name, or keyword..."
           className="pl-10 h-12 text-base bg-background/80 backdrop-blur-sm"
           value={query}
           onChange={(e) => setQuery(e.target.value)}

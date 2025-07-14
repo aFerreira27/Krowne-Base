@@ -11,7 +11,7 @@ export default function Home() {
             Krowne Product Hub
           </h1>
           <p className="max-w-xl text-lg text-muted-foreground">
-            Your central source for product information. Search by SKU, name, or keyword.
+            Your central source for product information.
           </p>
           <div className="w-full max-w-lg mt-4">
             <HomeSearch />
