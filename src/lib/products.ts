@@ -45,6 +45,7 @@ export function addProduct(productData: Omit<Product, 'id' | 'images' | 'related
         images: productData.images.map(img => img.url),
         relatedProducts: [],
         description: productData.description || '',
+        documentation: productData.documentation || [],
     };
 
     const storedProducts = getStoredProducts();

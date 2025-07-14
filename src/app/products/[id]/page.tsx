@@ -106,7 +106,7 @@ export default function ProductDetailPage() {
               </TabsContent>
               <TabsContent value="docs" className="mt-4">
                 <div className="space-y-2">
-                  {product.documentation.map((doc) => (
+                  {(product.documentation || []).map((doc) => (
                     <a
                       key={doc.name}
                       href={doc.url}

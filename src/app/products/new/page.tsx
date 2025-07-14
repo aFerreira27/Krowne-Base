@@ -27,6 +27,11 @@ const specSchema = z.object({
   value: z.string().min(1, 'Value is required'),
 });
 
+const docSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  url: z.string().url('Must be a valid URL'),
+});
+
 const complianceSchema = z.object({
   name: z.string().min(1, 'Compliance name is required'),
 });
@@ -38,6 +43,7 @@ const productSchema = z.object({
   standardFeatures: z.string().optional(),
   images: z.array(imageSchema).min(1, "At least one image is required"),
   specifications: z.array(specSchema),
+  documentation: z.array(docSchema),
   compliance: z.array(complianceSchema),
 });
 
@@ -70,6 +76,7 @@ export default function NewProductPage() {
       standardFeatures: '',
       images: [],
       specifications: [{ key: 'Material', value: '18 Gauge Stainless Steel' }],
+      documentation: [{ name: 'Spec Sheet', url: '' }],
       compliance: [{ name: 'NSF Certified' }],
     },
   });
@@ -82,6 +89,11 @@ export default function NewProductPage() {
   const { fields: specFields, append: appendSpec, remove: removeSpec } = useFieldArray({
     control: form.control,
     name: "specifications"
+  });
+
+  const { fields: docFields, append: appendDoc, remove: removeDoc } = useFieldArray({
+    control: form.control,
+    name: "documentation"
   });
 
   const { fields: complianceFields, append: appendCompliance, remove: removeCompliance } = useFieldArray({
@@ -352,6 +364,63 @@ export default function NewProductPage() {
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Specification
+                  </Button>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium mb-4">Documentation</h3>
+                <div className="border rounded-md p-4 space-y-4">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                    <Label>Document Name</Label>
+                    <Label>URL</Label>
+                    <div/>
+                  </div>
+                  {docFields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                      <FormField
+                        control={form.control}
+                        name={`documentation.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="sr-only">Document Name</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="e.g., Spec Sheet" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                          control={form.control}
+                          name={`documentation.${index}.url`}
+                          render={({ field }) => (
+                              <FormItem>
+                                  <FormLabel className="sr-only">URL</FormLabel>
+                                  <FormControl>
+                                  <Input {...field} placeholder='e.g., https://example.com/spec.pdf' />
+                                  </FormControl>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                      />
+                      <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removeDoc(index)}
+                      >
+                          <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendDoc({ name: '', url: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Document
                   </Button>
                 </div>
               </div>
