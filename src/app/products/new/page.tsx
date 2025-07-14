@@ -274,9 +274,9 @@ export default function NewProductPage() {
 
               <div>
                 <h3 className="text-lg font-medium mb-4">Specifications</h3>
-                <div className="space-y-4">
+                <div className="border rounded-md p-4 space-y-4">
                   {specFields.map((field, index) => (
-                    <div key={field.id} className="flex gap-4 items-end p-4 border rounded-md">
+                    <div key={field.id} className="flex gap-4 items-end">
                       <FormField
                         control={form.control}
                         name={`specifications.${index}.key`}
@@ -313,23 +313,22 @@ export default function NewProductPage() {
                       </Button>
                     </div>
                   ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendSpec({ key: '', value: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Specification
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => appendSpec({ key: '', value: '' })}
-                  className="mt-4"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Specification
-                </Button>
               </div>
 
               <div>
                 <h3 className="text-lg font-medium mb-4">Compliance</h3>
-                <div className="space-y-4">
+                <div className="border rounded-md p-4 space-y-4">
                   {complianceFields.map((field, index) => (
-                    <div key={field.id} className="flex gap-4 items-end p-4 border rounded-md">
+                    <div key={field.id} className="flex gap-4 items-end">
                       <FormField
                         control={form.control}
                         name={`compliance.${index}.name`}
@@ -353,16 +352,15 @@ export default function NewProductPage() {
                       </Button>
                     </div>
                   ))}
+                   <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => appendCompliance({ name: '' })}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Compliance
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => appendCompliance({ name: '' })}
-                  className="mt-4"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Compliance
-                </Button>
               </div>
 
               <div className="flex justify-end gap-2">
