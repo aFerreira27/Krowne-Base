@@ -13,22 +13,26 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Plus } from 'lucide-react';
 
+const imageSchema = z.object({
+  url: z.string().url('Must be a valid URL'),
+});
+
 const specSchema = z.object({
   key: z.string().min(1, 'Key is required'),
   value: z.string().min(1, 'Value is required'),
 });
 
-const docSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  url: z.string().url('Must be a valid URL'),
+const complianceSchema = z.object({
+  name: z.string().min(1, 'Compliance name is required'),
 });
 
 const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   sku: z.string().min(1, 'SKU is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
+  images: z.array(imageSchema),
   specifications: z.array(specSchema),
-  documentation: z.array(docSchema),
+  compliance: z.array(complianceSchema),
 });
 
 export default function NewProductPage() {
@@ -41,19 +45,25 @@ export default function NewProductPage() {
       name: '',
       sku: '',
       description: '',
+      images: [{ url: 'https://placehold.co/600x400.png' }],
       specifications: [{ key: 'Material', value: '18 Gauge Stainless Steel' }],
-      documentation: [{ name: 'Spec Sheet', url: '' }],
+      compliance: [{ name: 'NSF Certified' }],
     },
   });
   
+  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+    control: form.control,
+    name: "images"
+  });
+
   const { fields: specFields, append: appendSpec, remove: removeSpec } = useFieldArray({
     control: form.control,
     name: "specifications"
   });
 
-  const { fields: docFields, append: appendDoc, remove: removeDoc } = useFieldArray({
+  const { fields: complianceFields, append: appendCompliance, remove: removeCompliance } = useFieldArray({
     control: form.control,
-    name: "documentation"
+    name: "compliance"
   });
 
   function onSubmit(values: z.infer<typeof productSchema>) {
@@ -106,6 +116,34 @@ export default function NewProductPage() {
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div>
+                <h3 className="text-lg font-medium mb-4">Product Photos</h3>
+                <div className="space-y-4">
+                  {imageFields.map((field, index) => (
+                      <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
+                          <div className="flex-1">
+                            <FormField
+                                control={form.control}
+                                name={`images.${index}.url`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Image URL</FormLabel>
+                                        <FormControl><Input {...field} placeholder="https://example.com/photo.png" /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                          </div>
+                          <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
+                      </div>
+                  ))}
+                </div>
+                <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })} className="mt-4">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Photo
+                </Button>
               </div>
 
               <FormField
@@ -162,41 +200,30 @@ export default function NewProductPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-4">Documentation</h3>
+                <h3 className="text-lg font-medium mb-4">Compliance</h3>
                 <div className="space-y-4">
-                  {docFields.map((field, index) => (
+                  {complianceFields.map((field, index) => (
                       <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
-                          <div className="flex-1 grid grid-cols-2 gap-4">
+                         <div className="flex-1">
                             <FormField
                                 control={form.control}
-                                name={`documentation.${index}.name`}
+                                name={`compliance.${index}.name`}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name</FormLabel>
-                                        <FormControl><Input {...field} placeholder="e.g., Spec Sheet" /></FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name={`documentation.${index}.url`}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>URL</FormLabel>
-                                        <FormControl><Input {...field} placeholder="https://example.com/doc.pdf" /></FormControl>
+                                        <FormLabel>Certification</FormLabel>
+                                        <FormControl><Input {...field} placeholder="e.g., NSF Certified" /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                           </div>
-                          <Button type="button" variant="destructive" size="icon" onClick={() => removeDoc(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
+                          <Button type="button" variant="destructive" size="icon" onClick={() => removeCompliance(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
                       </div>
                   ))}
                 </div>
-                <Button type="button" variant="outline" onClick={() => appendDoc({ name: '', url: '' })} className="mt-4">
+                <Button type="button" variant="outline" onClick={() => appendCompliance({ name: '' })} className="mt-4">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Document
+                  Add Compliance
                 </Button>
               </div>
 
