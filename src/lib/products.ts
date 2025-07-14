@@ -1,5 +1,6 @@
 import { products as initialProducts } from './data';
 import type { Product } from './types';
+import { neon } from '@neondatabase/serverless';
 import { docTypeOptions, seriesOptions } from './types';
 
 const getStoredProducts = (): Product[] => {
