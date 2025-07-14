@@ -189,7 +189,11 @@ export default function NewProductPage() {
 
 
   function onSubmit(values: z.infer<typeof productSchema>) {
-    addProduct(values);
+    const productData = {
+      ...values,
+      description: values.description || '', // Provide empty string if undefined
+    };
+    addProduct(productData);
     toast({
       title: "Product Created",
       description: `${values.name} has been added to the database.`,
@@ -469,7 +473,9 @@ export default function NewProductPage() {
                                 <FormControl>
                                 <input
                                   type="file"
-                                  ref={el => docFileInputRefs.current[index] = el}
+                                  ref={el => {
+                                    docFileInputRefs.current[index] = el;
+                                  }}
                                   className="hidden"
                                   onChange={(e) => handleDocFileSelect(e, index)}
                                 />
