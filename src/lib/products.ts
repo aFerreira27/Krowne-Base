@@ -87,3 +87,8 @@ export function updateProduct(id: string, productData: Omit<Product, 'id' | 'ima
   
   localStorage.setItem('krowne_products', JSON.stringify(updatedProducts));
 }
+
+export function clearProducts() {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('krowne_products');
+}
