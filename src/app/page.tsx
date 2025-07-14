@@ -35,10 +35,18 @@ export default function Home() {
 
       <div className="flex justify-center">
         <Link href="/products/new" passHref>
-          <Button variant="outline" size="lg">
-            <Plus className="mr-2" />
-            Add New Product
-          </Button>
+          <div className="flex flex-col items-center gap-2 cursor-pointer group">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-16 w-16 rounded-full transition-all group-hover:scale-105 group-hover:shadow-md"
+            >
+              <Plus className="h-8 w-8" />
+            </Button>
+            <span className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+              Add New Product
+            </span>
+          </div>
         </Link>
       </div>
 
