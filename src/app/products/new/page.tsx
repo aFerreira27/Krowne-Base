@@ -33,8 +33,8 @@ const complianceSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   sku: z.string().min(1, 'SKU is required'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
-  standardFeatures: z.string().min(10, 'Standard Features must be at least 10 characters'),
+  description: z.string().optional(),
+  standardFeatures: z.string().optional(),
   images: z.array(imageSchema),
   specifications: z.array(specSchema),
   compliance: z.array(complianceSchema),
@@ -292,12 +292,13 @@ export default function NewProductPage() {
               <div>
                 <h3 className="text-lg font-medium mb-4">Specifications</h3>
                 <div className="border rounded-md p-4 space-y-4">
-                  <div className="grid grid-cols-2 gap-4 items-end">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
                     <Label>Key</Label>
                     <Label>Value</Label>
+                    <div/>
                   </div>
                   {specFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-2 gap-4 items-start">
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
                       <FormField
                         control={form.control}
                         name={`specifications.${index}.key`}
@@ -311,29 +312,27 @@ export default function NewProductPage() {
                           </FormItem>
                         )}
                       />
-                      <div className="flex gap-4 items-start">
-                        <FormField
-                            control={form.control}
-                            name={`specifications.${index}.value`}
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <FormLabel className="sr-only">Value</FormLabel>
-                                    <FormControl>
-                                    <Input {...field} placeholder='e.g., 84"' />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => removeSpec(index)}
-                        >
-                            <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <FormField
+                          control={form.control}
+                          name={`specifications.${index}.value`}
+                          render={({ field }) => (
+                              <FormItem className="flex-1">
+                                  <FormLabel className="sr-only">Value</FormLabel>
+                                  <FormControl>
+                                  <Input {...field} placeholder='e.g., 84"' />
+                                  </FormControl>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                      />
+                      <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => removeSpec(index)}
+                      >
+                          <Trash className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
                   <Button
@@ -352,6 +351,7 @@ export default function NewProductPage() {
                 <div className="border rounded-md p-4 space-y-4">
                    <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
                     <Label>Certification</Label>
+                    <div/>
                    </div>
                   {complianceFields.map((field, index) => (
                     <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
