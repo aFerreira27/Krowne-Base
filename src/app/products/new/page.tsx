@@ -55,6 +55,8 @@ export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isDragging, setIsDragging] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -84,6 +86,25 @@ export default function NewProductPage() {
   });
 
   const watchedImages = form.watch('images');
+  
+  const processFiles = (files: File[]) => {
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          appendImage({ url: reader.result });
+        }
+      };
+      reader.onerror = () => {
+        toast({
+          variant: 'destructive',
+          title: 'File Read Error',
+          description: `Could not read the file: ${file.name}`,
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -110,23 +131,19 @@ export default function NewProductPage() {
     const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
 
     if (files.length > 0) {
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (typeof reader.result === 'string') {
-            appendImage({ url: reader.result });
-          }
-        };
-        reader.onerror = () => {
-          toast({
-            variant: 'destructive',
-            title: 'File Read Error',
-            description: `Could not read the file: ${file.name}`,
-          });
-        };
-        reader.readAsDataURL(file);
-      });
+      processFiles(files);
     }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []).filter(file => file.type.startsWith('image/'));
+     if (files.length > 0) {
+      processFiles(files);
+    }
+  };
+  
+  const onDropZoneClick = () => {
+    fileInputRef.current?.click();
   };
 
 
@@ -183,19 +200,28 @@ export default function NewProductPage() {
                 <Card>
                   <CardContent className="p-4 space-y-4">
                      <div
+                      onClick={onDropZoneClick}
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
                       onDragEnter={handleDragEnter}
                       onDragLeave={handleDragLeave}
                       className={cn(
-                        "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out",
+                        "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out cursor-pointer",
                         isDragging ? "border-primary bg-accent" : "border-border hover:border-primary/50"
                       )}
                     >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileSelect}
+                      />
                       <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
                         <Upload className="h-8 w-8" />
                         <p className="font-medium">
-                          {isDragging ? 'Drop images here' : 'Drag & drop images here, or click to add URLs'}
+                          {isDragging ? 'Drop images here' : 'Drag & drop images, or click to select files'}
                         </p>
                         <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
                       </div>
@@ -228,10 +254,6 @@ export default function NewProductPage() {
                         ))}
                       </div>
                     )}
-                    <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Photo by URL
-                    </Button>
                   </CardContent>
                 </Card>
               </div>
