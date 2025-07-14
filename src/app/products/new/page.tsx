@@ -33,6 +33,7 @@ const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   sku: z.string().min(1, 'SKU is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
+  standardFeatures: z.string().min(10, 'Standard Features must be at least 10 characters'),
   images: z.array(imageSchema),
   specifications: z.array(specSchema),
   compliance: z.array(complianceSchema),
@@ -64,6 +65,7 @@ export default function NewProductPage() {
       name: '',
       sku: '',
       description: '',
+      standardFeatures: '',
       images: [],
       specifications: [{ key: 'Material', value: '18 Gauge Stainless Steel' }],
       compliance: [{ name: 'NSF Certified' }],
@@ -266,6 +268,20 @@ export default function NewProductPage() {
                     <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea placeholder="Enter a detailed product description..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="standardFeatures"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Standard Features</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="List the standard features of the product..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
