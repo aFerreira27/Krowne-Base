@@ -16,6 +16,7 @@ import Image from 'next/image';
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { addProduct } from '@/lib/products';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -35,7 +36,7 @@ const productSchema = z.object({
   sku: z.string().min(1, 'SKU is required'),
   description: z.string().optional(),
   standardFeatures: z.string().optional(),
-  images: z.array(imageSchema),
+  images: z.array(imageSchema).min(1, "At least one image is required"),
   specifications: z.array(specSchema),
   compliance: z.array(complianceSchema),
 });
@@ -151,12 +152,12 @@ export default function NewProductPage() {
 
 
   function onSubmit(values: z.infer<typeof productSchema>) {
-    console.log('New product data:', values);
+    addProduct(values);
     toast({
       title: "Product Created",
       description: `${values.name} has been added to the database.`,
     });
-    router.push(`/`); 
+    router.push(`/products`); 
   }
 
   return (
@@ -229,34 +230,43 @@ export default function NewProductPage() {
                         <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
                       </div>
                     </div>
-                    {imageFields.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                        {imageFields.map((field, index) => (
-                          <div key={field.id} className="group relative aspect-square">
-                            {isValidUrl(watchedImages?.[index]?.url) ? (
-                              <Image
-                                src={watchedImages[index].url}
-                                alt={`Product image preview ${index + 1}`}
-                                fill
-                                className="object-cover rounded-md border"
-                                data-ai-hint="product photo"
-                              />
-                            ) : (
-                               <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
-                                <span className="text-xs text-muted-foreground">Invalid URL</span>
-                               </div>
-                            )}
-                             <button
-                                type="button"
-                                onClick={() => removeImage(index)}
-                                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <Trash className="h-3 w-3" />
-                              </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={() => (
+                        <FormItem>
+                          {imageFields.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                              {imageFields.map((field, index) => (
+                                <div key={field.id} className="group relative aspect-square">
+                                  {isValidUrl(watchedImages?.[index]?.url) ? (
+                                    <Image
+                                      src={watchedImages[index].url}
+                                      alt={`Product image preview ${index + 1}`}
+                                      fill
+                                      className="object-cover rounded-md border"
+                                      data-ai-hint="product photo"
+                                    />
+                                  ) : (
+                                     <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
+                                      <span className="text-xs text-muted-foreground">Invalid URL</span>
+                                     </div>
+                                  )}
+                                   <button
+                                      type="button"
+                                      onClick={() => removeImage(index)}
+                                      className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      <Trash className="h-3 w-3" />
+                                    </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                     />
                   </CardContent>
                 </Card>
               </div>
@@ -316,7 +326,7 @@ export default function NewProductPage() {
                           control={form.control}
                           name={`specifications.${index}.value`}
                           render={({ field }) => (
-                              <FormItem className="flex-1">
+                              <FormItem>
                                   <FormLabel className="sr-only">Value</FormLabel>
                                   <FormControl>
                                   <Input {...field} placeholder='e.g., 84"' />

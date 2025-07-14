@@ -8,6 +8,10 @@ export interface ProductDocumentation {
   url: string;
 }
 
+export interface Compliance {
+    name: string;
+}
+
 export interface Product {
   id: string;
   sku: string;
@@ -17,4 +21,6 @@ export interface Product {
   specifications: ProductSpecification[];
   documentation: ProductDocumentation[];
   relatedProducts: string[]; // array of product IDs
+  standardFeatures?: string;
+  compliance?: Compliance[];
 }
