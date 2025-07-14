@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className="flex flex-col gap-8 md:gap-12">
-      <section className="relative h-[40vh] min-h-[300px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden border">
+      <section className="relative h-[40vh] min-h-[300px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden">
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
           <div className="flex items-baseline gap-x-4">
