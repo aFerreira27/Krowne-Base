@@ -11,13 +11,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus, Upload } from 'lucide-react';
+import { Trash, Plus, Upload, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { addProduct } from '@/lib/products';
-import { seriesOptions, docTypeOptions } from '@/lib/types';
+import { seriesOptions, docTypeOptions, Product } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const imageSchema = z.object({
@@ -43,14 +43,15 @@ const productSchema = z.object({
   sku: z.string().min(1, 'SKU is required'),
   series: z.enum(seriesOptions),
   description: z.string().optional(),
-  standardFeatures: z.string().optional(),
+  standard_features: z.string().optional(),
   images: z.array(imageSchema).optional(),
   specifications: z.array(specSchema),
   documentation: z.array(docSchema),
   compliance: z.array(complianceSchema),
 });
 
-// Helper to check for a valid URL or Data URI
+type ProductFormData = z.infer<typeof productSchema>;
+
 const isValidUrl = (url: string) => {
   if (!url) return false;
   if (url.startsWith('data:')) return true;
@@ -66,19 +67,20 @@ const isValidUrl = (url: string) => {
 export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const docFileInputRefs = React.useRef<(HTMLInputElement | null)[]>([]);
 
 
-  const form = useForm<z.infer<typeof productSchema>>({
+  const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
       sku: '',
       series: 'Silver',
       description: '',
-      standardFeatures: '',
+      standard_features: '',
       images: [],
       specifications: [],
       documentation: [],
@@ -188,17 +190,29 @@ export default function NewProductPage() {
   };
 
 
-  function onSubmit(values: z.infer<typeof productSchema>) {
-    const productData = {
-      ...values,
-      description: values.description || '', // Provide empty string if undefined
-    };
-    addProduct(productData);
-    toast({
-      title: "Product Created",
-      description: `${values.name} has been added to the database.`,
-    });
-    router.push(`/products`); 
+  async function onSubmit(values: ProductFormData) {
+    setIsSubmitting(true);
+    try {
+        const productDataForApi = {
+            ...values,
+            description: values.description || undefined,
+            standardFeatures: values.standard_features || undefined,
+        }
+        const result = await addProduct(productDataForApi as Omit<Product, 'id' | 'relatedProducts'>);
+        toast({
+            title: "Product Created",
+            description: `${values.name} has been added to the database.`,
+        });
+        router.push(`/products/${result.productId}`);
+    } catch (error) {
+         toast({
+          variant: 'destructive',
+          title: "Error creating product",
+          description: (error as Error).message,
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   return (
@@ -352,7 +366,7 @@ export default function NewProductPage() {
 
               <FormField
                 control={form.control}
-                name="standardFeatures"
+                name="standard_features"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Standard Features</FormLabel>
@@ -552,8 +566,11 @@ export default function NewProductPage() {
               </div>
 
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="ghost" onClick={() => router.back()}>Cancel</Button>
-                <Button type="submit">Create Product</Button>
+                <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isSubmitting}>Cancel</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Product
+                </Button>
               </div>
             </form>
           </Form>

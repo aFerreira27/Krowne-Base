@@ -1,37 +1,27 @@
 
-'use client';
-
-import { useEffect } from 'react';
-import { notFound, useParams } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProductById } from '@/lib/products';
-import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
+import { RecentlyViewedUpdater } from '@/components/recently-viewed-updater';
 
-export default function ProductDetailPage() {
-  const params = useParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const product = getProductById(id as string);
-  const { addProduct } = useRecentlyViewed();
-
-  useEffect(() => {
-    if (product && id) {
-      addProduct(id);
-    }
-  }, [id, addProduct, product]);
+export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const product = await getProductById(id);
 
   if (!product) {
-    return notFound();
+    notFound();
   }
 
   return (
     <div className="space-y-8">
+       <RecentlyViewedUpdater productId={id} />
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -57,7 +47,7 @@ export default function ProductDetailPage() {
 
       <Carousel className="w-full relative">
         <CarouselContent>
-          {product.images.map((src, index) => (
+          {product.images?.map((src, index) => (
             <CarouselItem key={index}>
               <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted">
                 <Image
@@ -71,7 +61,7 @@ export default function ProductDetailPage() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        {product.images.length > 1 && (
+        {product.images?.length > 1 && (
           <>
             <CarouselPrevious />
             <CarouselNext />
@@ -79,14 +69,14 @@ export default function ProductDetailPage() {
         )}
       </Carousel>
 
-      {product.standardFeatures && (
+      {product.standard_features && (
         <Card>
           <CardHeader>
             <CardTitle>Standard Features</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
-              {product.standardFeatures}
+              {product.standard_features}
             </div>
           </CardContent>
         </Card>
@@ -124,9 +114,9 @@ export default function ProductDetailPage() {
             <CardTitle>Documentation</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {product.documentation.map((doc) => (
+            {product.documentation.map((doc, index) => (
               <a
-                key={doc.type}
+                key={index}
                 href={doc.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -149,8 +139,8 @@ export default function ProductDetailPage() {
             <CardTitle>Compliance & Certifications</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {product.compliance.map((c) => (
-              <div key={c.name} className="flex items-center p-3 rounded-md border">
+            {product.compliance.map((c, index) => (
+              <div key={index} className="flex items-center p-3 rounded-md border">
                 <ShieldCheck className="h-5 w-5 mr-3 text-muted-foreground" />
                 <span>{c.name}</span>
               </div>
@@ -159,7 +149,7 @@ export default function ProductDetailPage() {
         </Card>
       )}
 
-      {product.images.length > 0 && (
+      {product.images?.length > 0 && (
         <div>
           <h2 className="text-2xl font-bold font-headline mb-4">Product Images</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -180,3 +170,4 @@ export default function ProductDetailPage() {
     </div>
   );
 }
+

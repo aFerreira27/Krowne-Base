@@ -16,16 +16,17 @@ export interface Compliance {
 
 export const seriesOptions = ['Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
 
+// This type now reflects the structure of the `products` table in your database
 export interface Product {
-  id: string;
+  id: string; // uuid
   sku: string;
   name: string;
   series: (typeof seriesOptions)[number];
   description: string;
-  images: string[];
-  specifications: ProductSpecification[];
-  documentation: ProductDocumentation[];
-  relatedProducts: string[]; // array of product IDs
-  standardFeatures?: string;
-  compliance?: Compliance[];
+  images: string[]; // TEXT[] in postgres
+  specifications: ProductSpecification[]; // JSONB
+  documentation: ProductDocumentation[]; // JSONB
+  related_products: string[]; // TEXT[] for product IDs
+  standard_features?: string;
+  compliance?: Compliance[]; // JSONB
 }

@@ -1,95 +1,70 @@
-import { products as initialProducts } from './data';
 import type { Product } from './types';
-import { neon } from '@neondatabase/serverless';
-import { docTypeOptions, seriesOptions } from './types';
+import { getDB } from '@/lib/db';
 
-const getStoredProducts = (): Product[] => {
-  if (typeof window === 'undefined') {
-    return [];
-  }
-  const stored = localStorage.getItem('krowne_products');
-  return stored ? JSON.parse(stored) : [];
-};
+export async function getProducts(query?: string): Promise<Product[]> {
+  const db = await getDB();
+  let selectQuery = 'SELECT id, name, sku, series, description, images, specifications, documentation, standard_features, compliance, related_products FROM products';
+  const queryParams: string[] = [];
 
-const getAllProducts = (): Product[] => {
-  const storedProducts = getStoredProducts();
-  const combined = [...initialProducts, ...storedProducts];
-  // Remove duplicates, giving precedence to stored products
-  const uniqueProducts = Array.from(new Map(combined.map(p => [p.id, p])).values());
-  return uniqueProducts;
-};
-
-export function getProducts(query?: string): Product[] {
-  let products = getAllProducts();
-  
   if (query) {
-    products = products.filter(p => 
-      p.name.toLowerCase().includes(query.toLowerCase()) ||
-      p.sku.toLowerCase().includes(query.toLowerCase()) ||
-      p.description?.toLowerCase().includes(query.toLowerCase())
-    );
+    selectQuery += ' WHERE name ILIKE $1 OR sku ILIKE $1 OR description ILIKE $1';
+    queryParams.push(`%${query}%`);
   }
 
-  return products;
+  const result = await db.query(selectQuery, queryParams);
+  return result.rows;
 }
 
-export function getProductById(id: string): Product | undefined {
-  const products = getAllProducts();
-  return products.find(p => p.id === id);
-}
-
-export function addProduct(productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images?: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
-    if (typeof window === 'undefined') return;
-
-    const newProduct: Product = {
-        ...productData,
-        id: new Date().getTime().toString(), // Simple unique ID
-        images: productData.images ? productData.images.map(img => img.url) : [],
-        relatedProducts: [],
-        description: productData.description || '',
-        documentation: productData.documentation || [],
-        compliance: productData.compliance || [],
-        series: productData.series || seriesOptions[0],
-    };
-
-    const storedProducts = getStoredProducts();
-    const updatedProducts = [...storedProducts, newProduct];
-    localStorage.setItem('krowne_products', JSON.stringify(updatedProducts));
-}
-
-
-export function updateProduct(id: string, productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images?: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
-  if (typeof window === 'undefined') return;
-
-  const productToUpdate: Product = {
-    ...productData,
-    id,
-    images: productData.images ? productData.images.map(img => img.url) : [],
-    relatedProducts: getProductById(id)?.relatedProducts || [],
-    description: productData.description || '',
-    documentation: productData.documentation || [],
-    compliance: productData.compliance || [],
-    series: productData.series || seriesOptions[0],
-  };
-
-  const storedProducts = getStoredProducts();
-  const updatedProducts = storedProducts.map(p => p.id === id ? productToUpdate : p);
+export async function getProductById(id: string): Promise<Product | null> {
+  const db = await getDB();
+  const result = await db.query('SELECT id, name, sku, series, description, images, specifications, documentation, standard_features, compliance, related_products FROM products WHERE id = $1', [id]);
   
-  // Also check initial products in case we are editing one of them
-  const initialExists = initialProducts.some(p => p.id === id);
-  if (initialExists && !storedProducts.some(p => p.id === id)) {
-     // it's an initial product that hasn't been edited before, add it to stored
-     updatedProducts.push(productToUpdate);
-  } else if (!initialExists && !storedProducts.some(p => p.id === id)) {
-      // This case should ideally not happen if called from edit page
-      console.warn("updateProduct called for a product that does not exist");
-      return;
+  if (result.rows.length === 0) {
+    return null;
   }
-  
-  localStorage.setItem('krowne_products', JSON.stringify(updatedProducts));
+  return result.rows[0];
 }
 
-export function clearProducts() {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem('krowne_products');
+export async function addProduct(productData: Omit<Product, 'id' | 'relatedProducts'>): Promise<{productId: string}> {
+  const response = await fetch('/api/products', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(productData),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(errorBody.error || 'Failed to create product');
+  }
+  return response.json();
+}
+
+export async function updateProduct(id: string, productData: Partial<Product>): Promise<Product> {
+    const response = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(errorBody.error || 'Failed to update product');
+    }
+    return response.json();
+}
+
+export async function clearProducts(): Promise<{ message: string }> {
+  const response = await fetch('/api/products/all', {
+    method: 'DELETE',
+  });
+
+   if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(errorBody.error || 'Failed to clear products');
+  }
+  return response.json();
 }
