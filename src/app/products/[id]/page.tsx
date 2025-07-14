@@ -10,7 +10,6 @@ import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
@@ -53,93 +52,31 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        <Carousel className="w-full relative">
-          <CarouselContent>
-            {product.images.map((src, index) => (
-              <CarouselItem key={index}>
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="aspect-video relative overflow-hidden rounded-lg">
-                      <Image
-                        src={src}
-                        alt={`${product.name} image ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="product photo"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {product.images.length > 1 && (
-            <>
-              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
-              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
-            </>
-          )}
-        </Carousel>
+      <Carousel className="w-full relative">
+        <CarouselContent>
+          {product.images.map((src, index) => (
+            <CarouselItem key={index}>
+              <div className="aspect-video relative overflow-hidden rounded-lg border">
+                <Image
+                  src={src}
+                  alt={`${product.name} image ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  data-ai-hint="product photo"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {product.images.length > 1 && (
+          <>
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+          </>
+        )}
+      </Carousel>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="specs">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="specs">Specifications</TabsTrigger>
-                <TabsTrigger value="docs">Documentation</TabsTrigger>
-                <TabsTrigger value="compliance">Compliance</TabsTrigger>
-              </TabsList>
-              <TabsContent value="specs" className="mt-4">
-                <Table>
-                  <TableBody>
-                    {product.specifications.map((spec) => (
-                      <TableRow key={spec.key}>
-                        <TableCell className="font-medium">{spec.key}</TableCell>
-                        <TableCell>{spec.value}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TabsContent>
-              <TabsContent value="docs" className="mt-4">
-                <div className="space-y-2">
-                  {(product.documentation || []).map((doc) => (
-                    <a
-                      key={doc.name}
-                      href={doc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3 rounded-md border hover:bg-muted transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-muted-foreground" />
-                        <span>{doc.name}</span>
-                      </div>
-                      <Download className="h-5 w-5 text-muted-foreground" />
-                    </a>
-                  ))}
-                </div>
-              </TabsContent>
-               <TabsContent value="compliance" className="mt-4">
-                <div className="space-y-2">
-                  {(product.compliance || []).map((c) => (
-                     <div key={c.name} className="flex items-center p-3 rounded-md border">
-                        <ShieldCheck className="h-5 w-5 mr-3 text-muted-foreground" />
-                        <span>{c.name}</span>
-                      </div>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      </div>
-
-       {product.standardFeatures && (
+      {product.standardFeatures && (
         <Card>
           <CardHeader>
             <CardTitle>Standard Features</CardTitle>
@@ -148,6 +85,73 @@ export default function ProductDetailPage() {
             <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
               {product.standardFeatures}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {product.specifications && product.specifications.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Specifications</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[200px]">Key</TableHead>
+                  <TableHead>Value</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {product.specifications.map((spec) => (
+                  <TableRow key={spec.key}>
+                    <TableCell className="font-medium">{spec.key}</TableCell>
+                    <TableCell>{spec.value}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+
+      {product.documentation && product.documentation.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Documentation</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {product.documentation.map((doc) => (
+              <a
+                key={doc.name}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-3 rounded-md border hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <span>{doc.name}</span>
+                </div>
+                <Download className="h-5 w-5 text-muted-foreground" />
+              </a>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {product.compliance && product.compliance.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Compliance & Certifications</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {product.compliance.map((c) => (
+              <div key={c.name} className="flex items-center p-3 rounded-md border">
+                <ShieldCheck className="h-5 w-5 mr-3 text-muted-foreground" />
+                <span>{c.name}</span>
+              </div>
+            ))}
           </CardContent>
         </Card>
       )}
