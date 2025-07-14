@@ -17,6 +17,8 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { addProduct } from '@/lib/products';
+import { seriesOptions } from '@/lib/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -39,6 +41,7 @@ const complianceSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   sku: z.string().min(1, 'SKU is required'),
+  series: z.enum(seriesOptions),
   description: z.string().optional(),
   standardFeatures: z.string().optional(),
   images: z.array(imageSchema).min(1, "At least one image is required"),
@@ -72,6 +75,7 @@ export default function NewProductPage() {
     defaultValues: {
       name: '',
       sku: '',
+      series: 'Silver',
       description: '',
       standardFeatures: '',
       images: [],
@@ -209,6 +213,30 @@ export default function NewProductPage() {
                     </FormItem>
                   )}
                 />
+                <div className="md:col-span-2">
+                <FormField
+                  control={form.control}
+                  name="series"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Series</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a series" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {seriesOptions.map(option => (
+                            <SelectItem key={option} value={option}>{option}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                </div>
               </div>
 
               <div>

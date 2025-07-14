@@ -5,6 +5,7 @@ export const products: Product[] = [
     id: '1',
     sku: 'KR19-W42R-10',
     name: 'Royal Series 42" Wall Cabinet',
+    series: 'Royal',
     description: 'Durable and spacious wall-mounted cabinet for commercial kitchens. Features stainless steel construction and sliding doors.',
     images: ['https://placehold.co/600x400.png', 'https://placehold.co/600x400.png', 'https://placehold.co/600x400.png'],
     specifications: [
@@ -19,12 +20,16 @@ export const products: Product[] = [
       { name: 'Installation Guide', url: '#' },
       { name: 'Warranty Information', url: '#' },
     ],
+    compliance: [
+        { name: 'NSF Certified' },
+    ],
     relatedProducts: ['2', '3'],
   },
   {
     id: '2',
     sku: 'HS-1L',
     name: 'Hand Sink with Faucet',
+    series: 'Silver',
     description: 'Compact hand sink with a gooseneck faucet, perfect for tight spaces. NSF listed.',
     images: ['https://placehold.co/600x400.png'],
     specifications: [
@@ -33,12 +38,16 @@ export const products: Product[] = [
       { key: 'Faucet', value: 'Included' },
     ],
     documentation: [{ name: 'Spec Sheet', url: '#' }],
+    compliance: [
+        { name: 'NSF Certified' },
+    ],
     relatedProducts: ['1', '4'],
   },
   {
     id: '3',
     sku: '21-129L',
     name: 'Pre-Rinse Faucet Assembly',
+    series: 'MasterTap',
     description: 'Heavy-duty pre-rinse assembly with a wall bracket for commercial dishwashing stations.',
     images: ['https://placehold.co/600x400.png'],
     specifications: [
@@ -53,6 +62,7 @@ export const products: Product[] = [
     id: '4',
     sku: 'C-200',
     name: 'Underbar Ice Bin/Cocktail Unit',
+    series: 'Diamond',
     description: 'A 36" wide stainless steel ice bin and cocktail unit with a 10-circuit cold plate.',
     images: ['https://placehold.co/600x400.png'],
     specifications: [
@@ -67,6 +77,7 @@ export const products: Product[] = [
     id: '5',
     sku: 'KR24-MS48L',
     name: '48" Mega-Top Sandwich Prep Table',
+    series: 'Royal',
     description: 'Efficiently prepare sandwiches and salads with this 48" wide prep table, featuring a refrigerated base and a mega-top that holds 18 pans.',
     images: ['https://placehold.co/600x400.png'],
     specifications: [

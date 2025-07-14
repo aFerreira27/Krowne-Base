@@ -1,5 +1,6 @@
 import { products as initialProducts } from './data';
 import type { Product } from './types';
+import { seriesOptions } from './types';
 
 const getStoredProducts = (): Product[] => {
   if (typeof window === 'undefined') {
@@ -46,6 +47,8 @@ export function addProduct(productData: Omit<Product, 'id' | 'images' | 'related
         relatedProducts: [],
         description: productData.description || '',
         documentation: productData.documentation || [],
+        compliance: productData.compliance || [],
+        series: productData.series || seriesOptions[0],
     };
 
     const storedProducts = getStoredProducts();

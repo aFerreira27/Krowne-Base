@@ -34,7 +34,10 @@ export default function ProductDetailPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <Badge variant="secondary">{product.sku}</Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary">{product.sku}</Badge>
+            {product.series && <Badge variant="outline">{product.series}</Badge>}
+          </div>
           <h1 className="text-3xl md:text-4xl font-bold font-headline mt-2">{product.name}</h1>
           <p className="text-lg text-muted-foreground mt-2 max-w-3xl">{product.description}</p>
         </div>
