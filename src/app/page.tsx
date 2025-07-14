@@ -8,7 +8,7 @@ export default function Home() {
       <section className="relative h-[40vh] min-h-[300px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden border">
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
-          <div className="flex items-center gap-x-4">
+          <div className="flex items-baseline gap-x-4">
             <Image
               src="https://cdn.ckitchen.com/img/brands/464b22b9-5162-4709-b5a4-c672841b2307/krowne-logo-250618mftv5w.png"
               alt="Krowne Logo"
