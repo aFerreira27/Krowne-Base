@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useEffect } from 'react';
 import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProductById, getProducts } from '@/lib/products';
+import { getProductById } from '@/lib/products';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +14,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Download, Edit, FileText } from 'lucide-react';
-import { ProductCard } from '@/components/product-card';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -30,8 +30,6 @@ export default function ProductDetailPage() {
   if (!product) {
     notFound();
   }
-
-  const relatedProducts = product.relatedProducts.map(id => getProductById(id)).filter(Boolean);
 
   return (
     <div className="space-y-8">
@@ -130,11 +128,21 @@ export default function ProductDetailPage() {
         </Card>
       </div>
 
-      {relatedProducts.length > 0 && (
+      {product.images.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold font-headline mb-4">Related Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map(p => p && <ProductCard key={p.id} product={p} />)}
+          <h2 className="text-2xl font-bold font-headline mb-4">Product Images</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {product.images.map((src, index) => (
+              <div key={index} className="aspect-square relative overflow-hidden rounded-lg border">
+                <Image
+                  src={src}
+                  alt={`${product.name} image ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  data-ai-hint="product photo"
+                />
+              </div>
+            ))}
           </div>
         </div>
       )}
