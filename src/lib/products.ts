@@ -38,13 +38,13 @@ export function getProductById(id: string): Product | undefined {
   return products.find(p => p.id === id);
 }
 
-export function addProduct(productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
+export function addProduct(productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images?: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
     if (typeof window === 'undefined') return;
 
     const newProduct: Product = {
         ...productData,
         id: new Date().getTime().toString(), // Simple unique ID
-        images: productData.images.map(img => img.url),
+        images: productData.images ? productData.images.map(img => img.url) : [],
         relatedProducts: [],
         description: productData.description || '',
         documentation: productData.documentation || [],
@@ -58,13 +58,13 @@ export function addProduct(productData: Omit<Product, 'id' | 'images' | 'related
 }
 
 
-export function updateProduct(id: string, productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
+export function updateProduct(id: string, productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images?: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
   if (typeof window === 'undefined') return;
 
   const productToUpdate: Product = {
     ...productData,
     id,
-    images: productData.images.map(img => img.url),
+    images: productData.images ? productData.images.map(img => img.url) : [],
     relatedProducts: getProductById(id)?.relatedProducts || [],
     description: productData.description || '',
     documentation: productData.documentation || [],

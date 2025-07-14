@@ -16,17 +16,20 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const imageUrl = product.images && product.images.length > 0 ? product.images[0] : 'https://placehold.co/600x400.png';
+  const imageHint = product.images && product.images.length > 0 ? "product photo" : "placeholder";
+
   return (
     <Link href={`/products/${product.id}`} className="group block">
       <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
         <CardHeader>
           <div className="aspect-video relative w-full overflow-hidden rounded-md bg-muted">
             <Image
-              src={product.images[0]}
+              src={imageUrl}
               alt={product.name}
               fill
               className="object-contain transition-transform duration-300 group-hover:scale-105"
-              data-ai-hint="product photo"
+              data-ai-hint={imageHint}
             />
           </div>
         </CardHeader>

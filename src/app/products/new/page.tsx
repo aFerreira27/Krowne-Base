@@ -44,7 +44,7 @@ const productSchema = z.object({
   series: z.enum(seriesOptions),
   description: z.string().optional(),
   standardFeatures: z.string().optional(),
-  images: z.array(imageSchema).min(1, "At least one image is required"),
+  images: z.array(imageSchema).optional(),
   specifications: z.array(specSchema),
   documentation: z.array(docSchema),
   compliance: z.array(complianceSchema),
