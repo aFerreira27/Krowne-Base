@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/products', label: 'Products', icon: Package },
-  { href: '/status', label: 'DB Status', icon: BarChart2 },
+  { href: '/status', label: 'Status', icon: BarChart2 },
 ];
 
 export function Header() {
