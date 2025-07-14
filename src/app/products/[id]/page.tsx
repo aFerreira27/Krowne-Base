@@ -25,7 +25,7 @@ export default function ProductDetailPage() {
     if (product) {
       addProduct(id);
     }
-  }, [id, addProduct, product]);
+  }, [id, addProduct]);
 
   if (!product) {
     notFound();
