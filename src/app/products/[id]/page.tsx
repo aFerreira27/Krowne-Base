@@ -54,7 +54,7 @@ export default function ProductDetailPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
-        <Carousel className="w-full">
+        <Carousel className="w-full relative">
           <CarouselContent>
             {product.images.map((src, index) => (
               <CarouselItem key={index}>
@@ -76,8 +76,8 @@ export default function ProductDetailPage() {
           </CarouselContent>
           {product.images.length > 1 && (
             <>
-              <CarouselPrevious />
-              <CarouselNext />
+              <CarouselPrevious className="absolute left-4" />
+              <CarouselNext className="absolute right-4" />
             </>
           )}
         </Carousel>
