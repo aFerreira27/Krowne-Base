@@ -37,7 +37,9 @@ export function useRecentlyViewed() {
 
   const addProduct = useCallback((productId: string) => {
     setProductIds(prevIds => {
+      // Create a new array, add the new productId, and filter out any existing occurrences of it.
       const newIds = [productId, ...prevIds.filter(id => id !== productId)];
+      // Slice the array to respect the MAX_RECENT_ITEMS limit.
       return newIds.slice(0, MAX_RECENT_ITEMS);
     });
   }, []);

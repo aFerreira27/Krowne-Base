@@ -23,9 +23,9 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (product) {
-      addProduct(product.id);
+      addProduct(id);
     }
-  }, [product, addProduct]);
+  }, [id, addProduct, product]);
 
   if (!product) {
     notFound();
