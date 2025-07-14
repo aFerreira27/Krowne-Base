@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Home, Package, BarChart2, PanelLeft } from 'lucide-react';
+import { KrowneLogo } from './icons/krowne-logo';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -32,14 +33,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2">
-            <Image 
-              src="https://placehold.co/160x40.png"
-              alt="Krowne Logo"
-              width={120}
-              height={30}
-              className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10"
-              data-ai-hint="logo"
-            />
+            <KrowneLogo className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10" />
           </div>
         </SidebarHeader>
         <SidebarContent>
