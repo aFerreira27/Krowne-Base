@@ -1,6 +1,6 @@
 import { products as initialProducts } from './data';
 import type { Product } from './types';
-import { seriesOptions } from './types';
+import { docTypeOptions, seriesOptions } from './types';
 
 const getStoredProducts = (): Product[] => {
   if (typeof window === 'undefined') {
@@ -37,7 +37,7 @@ export function getProductById(id: string): Product | undefined {
   return products.find(p => p.id === id);
 }
 
-export function addProduct(productData: Omit<Product, 'id' | 'images' | 'relatedProducts'> & { images: { url: string }[] }) {
+export function addProduct(productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
     if (typeof window === 'undefined') return;
 
     const newProduct: Product = {
@@ -54,4 +54,36 @@ export function addProduct(productData: Omit<Product, 'id' | 'images' | 'related
     const storedProducts = getStoredProducts();
     const updatedProducts = [...storedProducts, newProduct];
     localStorage.setItem('krowne_products', JSON.stringify(updatedProducts));
+}
+
+
+export function updateProduct(id: string, productData: Omit<Product, 'id' | 'images' | 'relatedProducts' | 'documentation'> & { images: { url: string }[] } & { documentation: { type: (typeof docTypeOptions)[number], url: string }[] }) {
+  if (typeof window === 'undefined') return;
+
+  const productToUpdate: Product = {
+    ...productData,
+    id,
+    images: productData.images.map(img => img.url),
+    relatedProducts: getProductById(id)?.relatedProducts || [],
+    description: productData.description || '',
+    documentation: productData.documentation || [],
+    compliance: productData.compliance || [],
+    series: productData.series || seriesOptions[0],
+  };
+
+  const storedProducts = getStoredProducts();
+  const updatedProducts = storedProducts.map(p => p.id === id ? productToUpdate : p);
+  
+  // Also check initial products in case we are editing one of them
+  const initialExists = initialProducts.some(p => p.id === id);
+  if (initialExists && !storedProducts.some(p => p.id === id)) {
+     // it's an initial product that hasn't been edited before, add it to stored
+     updatedProducts.push(productToUpdate);
+  } else if (!initialExists && !storedProducts.some(p => p.id === id)) {
+      // This case should ideally not happen if called from edit page
+      console.warn("updateProduct called for a product that does not exist");
+      return;
+  }
+  
+  localStorage.setItem('krowne_products', JSON.stringify(updatedProducts));
 }

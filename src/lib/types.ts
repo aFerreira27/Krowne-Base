@@ -3,8 +3,10 @@ export interface ProductSpecification {
   value: string;
 }
 
+export const docTypeOptions = ["Spec Sheet", "3D Drawing", "2D Drawing", "Other"] as const;
+
 export interface ProductDocumentation {
-  name: string;
+  type: (typeof docTypeOptions)[number];
   url: string;
 }
 

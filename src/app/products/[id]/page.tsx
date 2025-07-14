@@ -126,7 +126,7 @@ export default function ProductDetailPage() {
           <CardContent className="space-y-2">
             {product.documentation.map((doc) => (
               <a
-                key={doc.name}
+                key={doc.type}
                 href={doc.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -134,7 +134,7 @@ export default function ProductDetailPage() {
               >
                 <div className="flex items-center gap-3">
                   <FileText className="h-5 w-5 text-muted-foreground" />
-                  <span>{doc.name}</span>
+                  <span>{doc.type}</span>
                 </div>
                 <Download className="h-5 w-5 text-muted-foreground" />
               </a>

@@ -5,7 +5,7 @@ import { notFound, useParams, useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { getProductById } from '@/lib/products';
+import { getProductById, updateProduct } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,7 +17,7 @@ import Image from 'next/image';
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
-import { seriesOptions } from '@/lib/types';
+import { seriesOptions, docTypeOptions } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const imageSchema = z.object({
@@ -30,7 +30,7 @@ const specSchema = z.object({
 });
 
 const docSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  type: z.enum(docTypeOptions),
   url: z.string().url('Must be a valid URL or Data URI'),
 });
 
@@ -97,7 +97,7 @@ export default function EditProductPage() {
     name: "specifications"
   });
 
-  const { fields: docFields, append: appendDoc, remove: removeDoc, update: updateDoc } = useFieldArray({
+  const { fields: docFields, append: appendDoc, remove: removeDoc, update: updateDoc, watch: watchDoc } = useFieldArray({
     control: form.control,
     name: "documentation"
   });
@@ -138,7 +138,8 @@ export default function EditProductPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          updateDoc(index, { name: file.name, url: reader.result });
+          const currentDoc = watchDoc()[index];
+          updateDoc(index, { ...currentDoc, url: reader.result });
         }
       };
       reader.onerror = () => {
@@ -194,12 +195,14 @@ export default function EditProductPage() {
 
 
   function onSubmit(values: z.infer<typeof productSchema>) {
-    console.log('Updated product data:', values);
-    toast({
-      title: "Product Updated",
-      description: `${values.name} has been saved successfully.`,
-    });
-    router.push(`/products/${id}`);
+    if (product) {
+      updateProduct(product.id, values);
+      toast({
+        title: "Product Updated",
+        description: `${values.name} has been saved successfully.`,
+      });
+      router.push(`/products/${id}`);
+    }
   }
 
   return (
@@ -426,21 +429,30 @@ export default function EditProductPage() {
                 <h3 className="text-lg font-medium mb-4">Documentation</h3>
                 <div className="border rounded-md p-4 space-y-4">
                   <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
-                    <Label>Document Name</Label>
+                    <Label>Document Type</Label>
                     <Label>File</Label>
                     <div/>
                   </div>
                   {docFields.map((field, index) => (
                     <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
-                      <FormField
+                       <FormField
                         control={form.control}
-                        name={`documentation.${index}.name`}
+                        name={`documentation.${index}.type`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="sr-only">Document Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="e.g., Spec Sheet" />
-                            </FormControl>
+                            <FormLabel className="sr-only">Document Type</FormLabel>
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {docTypeOptions.map(option => (
+                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -487,7 +499,7 @@ export default function EditProductPage() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => appendDoc({ name: '', url: '' })}
+                    onClick={() => appendDoc({ type: 'Other', url: '' })}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Document
