@@ -11,11 +11,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus } from 'lucide-react';
+import { Trash, Plus, Upload } from 'lucide-react';
 import Image from 'next/image';
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 const imageSchema = z.object({
-  url: z.string().url('Must be a valid URL'),
+  url: z.string().url('Must be a valid URL or Data URI'),
 });
 
 const specSchema = z.object({
@@ -36,8 +38,10 @@ const productSchema = z.object({
   compliance: z.array(complianceSchema),
 });
 
-// Helper to check for a valid URL
+// Helper to check for a valid URL or Data URI
 const isValidUrl = (url: string) => {
+  if (!url) return false;
+  if (url.startsWith('data:image/')) return true;
   try {
     new URL(url);
     return true;
@@ -50,6 +54,7 @@ const isValidUrl = (url: string) => {
 export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [isDragging, setIsDragging] = React.useState(false);
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -57,7 +62,7 @@ export default function NewProductPage() {
       name: '',
       sku: '',
       description: '',
-      images: [{ url: 'https://placehold.co/600x400.png' }],
+      images: [],
       specifications: [{ key: 'Material', value: '18 Gauge Stainless Steel' }],
       compliance: [{ name: 'NSF Certified' }],
     },
@@ -80,17 +85,58 @@ export default function NewProductPage() {
 
   const watchedImages = form.watch('images');
 
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+
+    if (files.length > 0) {
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            appendImage({ url: reader.result });
+          }
+        };
+        reader.onerror = () => {
+          toast({
+            variant: 'destructive',
+            title: 'File Read Error',
+            description: `Could not read the file: ${file.name}`,
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+
   function onSubmit(values: z.infer<typeof productSchema>) {
-    // Here you would typically handle the creation of the new product,
-    // e.g., by calling an API or updating your data source.
     console.log('New product data:', values);
     toast({
       title: "Product Created",
       description: `${values.name} has been added to the database.`,
     });
-    // For now, we just redirect. In a real app, you might get an ID back
-    // and redirect to the new product's page, e.g., /products/new-id
-    router.push(`/products`); 
+    router.push(`/`); 
   }
 
   return (
@@ -136,46 +182,55 @@ export default function NewProductPage() {
                 <h3 className="text-lg font-medium mb-4">Product Photos</h3>
                 <Card>
                   <CardContent className="p-4 space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {imageFields.map((field, index) => (
-                        <div key={field.id} className="flex flex-col gap-4 p-4 border rounded-md">
-                          <div className="space-y-2">
-                              <FormField
-                                control={form.control}
-                                name={`images.${index}.url`}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <div className="flex justify-between items-center">
-                                      <FormLabel>Image URL</FormLabel>
-                                      <Button type="button" variant="destructive" size="icon" className="h-6 w-6" onClick={() => removeImage(index)}>
-                                          <Trash className="h-3 w-3" />
-                                      </Button>
-                                    </div>
-                                    <FormControl>
-                                      <Input {...field} placeholder="https://example.com/photo.png" />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                          </div>
-                          {watchedImages?.[index]?.url && (
-                            <div className="relative aspect-video rounded-md overflow-hidden border">
+                     <div
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragEnter={handleDragEnter}
+                      onDragLeave={handleDragLeave}
+                      className={cn(
+                        "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out",
+                        isDragging ? "border-primary bg-accent" : "border-border hover:border-primary/50"
+                      )}
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
+                        <Upload className="h-8 w-8" />
+                        <p className="font-medium">
+                          {isDragging ? 'Drop images here' : 'Drag & drop images here, or click to add URLs'}
+                        </p>
+                        <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
+                      </div>
+                    </div>
+                    {imageFields.length > 0 && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                        {imageFields.map((field, index) => (
+                          <div key={field.id} className="group relative aspect-square">
+                            {isValidUrl(watchedImages?.[index]?.url) ? (
                               <Image
-                                src={isValidUrl(watchedImages[index].url) ? watchedImages[index].url : 'https://placehold.co/600x400.png'}
+                                src={watchedImages[index].url}
                                 alt={`Product image preview ${index + 1}`}
                                 fill
-                                className="object-cover"
+                                className="object-cover rounded-md border"
                                 data-ai-hint="product photo"
                               />
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                            ) : (
+                               <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
+                                <span className="text-xs text-muted-foreground">Invalid URL</span>
+                               </div>
+                            )}
+                             <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <Trash className="h-3 w-3" />
+                              </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })}>
                       <Plus className="mr-2 h-4 w-4" />
-                      Add Photo
+                      Add Photo by URL
                     </Button>
                   </CardContent>
                 </Card>
