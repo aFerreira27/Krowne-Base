@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -198,7 +199,11 @@ const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const { scrollPrev, canScrollPrev } = useCarousel()
+
+  if (!canScrollPrev) {
+    return null;
+  }
 
   return (
     <Button
@@ -207,12 +212,9 @@ const CarouselPrevious = React.forwardRef<
       size={size}
       className={cn(
         "absolute h-8 w-8 rounded-full z-10",
-        orientation === "horizontal"
-          ? "left-2 top-1/2 -translate-y-1/2"
-          : "top-2 left-1/2 -translate-x-1/2 rotate-90",
+        "left-2 top-1/2 -translate-y-1/2",
         className
       )}
-      disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
@@ -227,7 +229,11 @@ const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
 >(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const { scrollNext, canScrollNext } = useCarousel()
+
+  if (!canScrollNext) {
+    return null;
+  }
 
   return (
     <Button
@@ -236,12 +242,9 @@ const CarouselNext = React.forwardRef<
       size={size}
       className={cn(
         "absolute h-8 w-8 rounded-full z-10",
-        orientation === "horizontal"
-          ? "right-2 top-1/2 -translate-y-1/2"
-          : "bottom-2 left-1/2 -translate-x-1/2 rotate-90",
+        "right-2 top-1/2 -translate-y-1/2",
         className
       )}
-      disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
