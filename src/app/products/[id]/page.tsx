@@ -59,12 +59,12 @@ export default function ProductDetailPage() {
         <CarouselContent>
           {product.images.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="aspect-video relative overflow-hidden rounded-lg border">
+              <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted">
                 <Image
                   src={src}
                   alt={`${product.name} image ${index + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   data-ai-hint="product photo"
                 />
               </div>
@@ -164,12 +164,12 @@ export default function ProductDetailPage() {
           <h2 className="text-2xl font-bold font-headline mb-4">Product Images</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {product.images.map((src, index) => (
-              <div key={index} className="aspect-square relative overflow-hidden rounded-lg border">
+              <div key={index} className="aspect-square relative overflow-hidden rounded-lg border bg-muted">
                 <Image
                   src={src}
                   alt={`${product.name} image ${index + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   data-ai-hint="product photo"
                 />
               </div>
