@@ -3,6 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   SidebarProvider,
@@ -16,7 +17,6 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Home, Package, BarChart2, PanelLeft } from 'lucide-react';
-import { KrowneLogo } from './icons/krowne-logo';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -32,25 +32,30 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2">
-            <KrowneLogo className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10" />
+            <Image 
+              src="https://placehold.co/160x40.png"
+              alt="Krowne Logo"
+              width={120}
+              height={30}
+              className="h-8 w-auto text-foreground group-data-[collapsible=icon]:h-10"
+              data-ai-hint="logo"
+            />
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} passHref>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                    tooltip={item.label}
-                  >
-                    <div>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </div>
-                  </SidebarMenuButton>
-                </Link>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  tooltip={item.label}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
