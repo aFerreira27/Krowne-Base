@@ -80,9 +80,9 @@ export default function NewProductPage() {
       description: '',
       standardFeatures: '',
       images: [],
-      specifications: [{ key: 'Material', value: '18 Gauge Stainless Steel' }],
-      documentation: [{ type: 'Spec Sheet', url: '' }],
-      compliance: [{ name: 'NSF Certified' }],
+      specifications: [],
+      documentation: [],
+      compliance: [],
     },
   });
   
