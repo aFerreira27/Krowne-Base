@@ -97,7 +97,7 @@ export default function EditProductPage() {
     name: "specifications"
   });
 
-  const { fields: docFields, append: appendDoc, remove: removeDoc, update: updateDoc, watch: watchDoc } = useFieldArray({
+  const { fields: docFields, append: appendDoc, remove: removeDoc, update: updateDoc } = useFieldArray({
     control: form.control,
     name: "documentation"
   });
@@ -138,8 +138,7 @@ export default function EditProductPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          const currentDoc = watchDoc()[index];
-          updateDoc(index, { ...currentDoc, url: reader.result });
+          updateDoc(index, { type: 'Other', url: reader.result });
         }
       };
       reader.onerror = () => {
@@ -377,7 +376,7 @@ export default function EditProductPage() {
                     <div/>
                   </div>
                   {specFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-center">
                       <FormField
                         control={form.control}
                         name={`specifications.${index}.key`}
@@ -434,7 +433,7 @@ export default function EditProductPage() {
                     <div/>
                   </div>
                   {docFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-center">
                        <FormField
                         control={form.control}
                         name={`documentation.${index}.type`}
@@ -515,7 +514,7 @@ export default function EditProductPage() {
                     <div/>
                    </div>
                   {complianceFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
+                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-center">
                       <FormField
                         control={form.control}
                         name={`compliance.${index}.name`}
