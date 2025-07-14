@@ -136,41 +136,43 @@ export default function NewProductPage() {
                 <h3 className="text-lg font-medium mb-4">Product Photos</h3>
                 <Card>
                   <CardContent className="p-4 space-y-4">
-                    {imageFields.map((field, index) => (
-                      <div key={field.id} className="flex flex-col gap-4 p-4 border rounded-md">
-                        <div className="flex gap-4 items-start">
-                          <div className="flex-1 space-y-2">
-                            <FormField
-                              control={form.control}
-                              name={`images.${index}.url`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Image URL</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} placeholder="https://example.com/photo.png" />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {imageFields.map((field, index) => (
+                        <div key={field.id} className="flex flex-col gap-4 p-4 border rounded-md">
+                          <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name={`images.${index}.url`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <div className="flex justify-between items-center">
+                                      <FormLabel>Image URL</FormLabel>
+                                      <Button type="button" variant="destructive" size="icon" className="h-6 w-6" onClick={() => removeImage(index)}>
+                                          <Trash className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                    <FormControl>
+                                      <Input {...field} placeholder="https://example.com/photo.png" />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                           </div>
-                          <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} className="mt-7">
-                            <Trash className="h-4 w-4" />
-                          </Button>
+                          {watchedImages?.[index]?.url && (
+                            <div className="relative aspect-video rounded-md overflow-hidden border">
+                              <Image
+                                src={isValidUrl(watchedImages[index].url) ? watchedImages[index].url : 'https://placehold.co/600x400.png'}
+                                alt={`Product image preview ${index + 1}`}
+                                fill
+                                className="object-cover"
+                                data-ai-hint="product photo"
+                              />
+                            </div>
+                          )}
                         </div>
-                        {watchedImages?.[index]?.url && (
-                          <div className="relative aspect-video rounded-md overflow-hidden border">
-                            <Image
-                              src={isValidUrl(watchedImages[index].url) ? watchedImages[index].url : 'https://placehold.co/600x400.png'}
-                              alt={`Product image preview ${index + 1}`}
-                              fill
-                              className="object-cover"
-                              data-ai-hint="product photo"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                     <Button type="button" variant="outline" onClick={() => appendImage({ url: '' })}>
                       <Plus className="mr-2 h-4 w-4" />
                       Add Photo
