@@ -138,7 +138,7 @@ export default function EditProductPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          updateDoc(index, { type: 'Other', url: reader.result });
+          updateDoc(index, { ...form.getValues(`documentation.${index}`), url: reader.result });
         }
       };
       reader.onerror = () => {
@@ -376,7 +376,7 @@ export default function EditProductPage() {
                     <div/>
                   </div>
                   {specFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-center">
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
                       <FormField
                         control={form.control}
                         name={`specifications.${index}.key`}
@@ -433,7 +433,7 @@ export default function EditProductPage() {
                     <div/>
                   </div>
                   {docFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-center">
+                    <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
                        <FormField
                         control={form.control}
                         name={`documentation.${index}.type`}
@@ -514,7 +514,7 @@ export default function EditProductPage() {
                     <div/>
                    </div>
                   {complianceFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-center">
+                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
                       <FormField
                         control={form.control}
                         name={`compliance.${index}.name`}
