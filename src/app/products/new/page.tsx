@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Trash, Plus } from 'lucide-react';
+import Image from 'next/image';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL'),
@@ -65,6 +66,8 @@ export default function NewProductPage() {
     control: form.control,
     name: "compliance"
   });
+
+  const watchedImages = form.watch('images');
 
   function onSubmit(values: z.infer<typeof productSchema>) {
     // Here you would typically handle the creation of the new product,
@@ -123,7 +126,7 @@ export default function NewProductPage() {
                 <div className="space-y-4">
                   {imageFields.map((field, index) => (
                       <div key={field.id} className="flex gap-4 items-start p-4 border rounded-md">
-                          <div className="flex-1">
+                          <div className="flex-1 space-y-4">
                             <FormField
                                 control={form.control}
                                 name={`images.${index}.url`}
@@ -135,6 +138,19 @@ export default function NewProductPage() {
                                     </FormItem>
                                 )}
                             />
+                            {watchedImages?.[index]?.url && (
+                                <div className="relative aspect-video rounded-md overflow-hidden border">
+                                    <Image 
+                                        src={watchedImages[index].url}
+                                        alt="Product image preview"
+                                        fill
+                                        className="object-cover"
+                                        data-ai-hint="product photo"
+                                        onError={(e) => e.currentTarget.style.display = 'none'}
+                                        onLoad={(e) => e.currentTarget.style.display = 'block'}
+                                    />
+                                </div>
+                            )}
                           </div>
                           <Button type="button" variant="destructive" size="icon" onClick={() => removeImage(index)} className="mt-8"><Trash className="h-4 w-4" /></Button>
                       </div>
