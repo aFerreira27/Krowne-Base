@@ -1,16 +1,22 @@
-import * as React from "react"
+import * as React from 'react';
 
 export const KrowneLogo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
+    viewBox="0 0 200 52"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
     {...props}
   >
-    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+    <path d="M26.4 0.600098H38.4V51.0001H26.4V0.600098Z" />
+    <path d="M63.6 0.600098H75.6V51.0001H63.6V0.600098Z" />
+    <path d="M100.2 0.600098H112.2V51.0001H100.2V0.600098Z" />
+    <path d="M136.8 0.600098H148.8V51.0001H136.8V0.600098Z" />
+    <path d="M173.4 0.600098H185.4V51.0001H173.4V0.600098Z" />
+    <path d="M0 25.8001L12.6 0.600098H22.2L9.6 25.8001L22.2 51.0001H12.6L0 25.8001Z" />
+    <path d="M39 25.8001L51.6 0.600098H61.2L48.6 25.8001L61.2 51.0001H51.6L39 25.8001Z" />
+    <path d="M76.2 25.8001L88.8 0.600098H98.4L85.8 25.8001L98.4 51.0001H88.8L76.2 25.8001Z" />
+    <path d="M112.8 25.8001L125.4 0.600098H135L122.4 25.8001L135 51.0001H125.4L112.8 25.8001Z" />
+    <path d="M149.4 25.8001L162 0.600098H171.6L159 25.8001L171.6 51.0001H162L149.4 25.8001Z" />
+    <path d="M186 25.8001L198.6 0.600098H200V51.0001H188.6L186 25.8001Z" />
   </svg>
-)
+);
