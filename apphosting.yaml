@@ -24,7 +24,7 @@ env:
     availability:
       - RUNTIME
   - variable: DB_NAME
-    value: krownebase-1
+    value: krownebase
     availability:
       - RUNTIME
   # Optional: Uncomment and set if you are using private IP

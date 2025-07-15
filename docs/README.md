@@ -1,5 +1,5 @@
 
-# Krowne Product Hub
+# Krowne Base
 
 This application is a comprehensive hub for managing and viewing Krowne product information. It provides a user-friendly interface for searching, viewing, creating, and editing product details, all backed by a robust cloud-based infrastructure.
 
