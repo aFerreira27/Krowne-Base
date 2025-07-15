@@ -6,9 +6,10 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 ## Table of Contents
 1.  [Technology Stack](#technology-stack)
 2.  [Key Features](#key-features)
-3.  [Project Structure](#project-structure)
-4.  [Key Libraries & Dependencies](#key-libraries--dependencies)
-5.  [Local Development Setup](#local-development-setup)
+3.  [Data Flow: From Input to Database](#data-flow-from-input-to-database)
+4.  [Project Structure](#project-structure)
+5.  [Key Libraries & Dependencies](#key-libraries--dependencies)
+6.  [Local Development Setup](#local-development-setup)
 
 ---
 
@@ -34,6 +35,28 @@ The Krowne Product Hub is built with a modern, scalable, and type-safe technolog
 -   **Product Detail View**: A comprehensive page displaying all product details, including images, specifications, documentation, and compliance information.
 -   **Product Creation & Editing**: Robust forms for adding new products and editing existing ones, with support for image and file uploads.
 -   **Database Sync Status**: A mock page indicating the synchronization status with other company databases.
+
+## Data Flow: From Input to Database
+
+Understanding the path data takes is key to working with this application. Here is the step-by-step lifecycle for creating and updating a product:
+
+1.  **User Input (Client-Side Form)**: The process starts on the `/products/new` or `/products/[id]/edit` pages. The user fills out a form built with **React Hook Form** and validated by a **Zod** schema.
+
+2.  **Client-Side API Call**: When the user submits the form, a client-side function from `src/lib/products-client.ts` is triggered. This function uses the native `fetch` API to send the validated form data as a JSON payload to the corresponding Next.js API route (e.g., `POST /api/products`).
+
+3.  **API Route Handler (Server-Side)**: The request is received by the appropriate API route handler in `src/app/api/products/`. This is the application's "backend" layer, running on the server.
+
+4.  **Database Interaction (Server-Side)**: The API handler calls a dedicated server-side function from `src/lib/products.ts`. This function contains the raw **pg** (PostgreSQL) logic to `INSERT` or `UPDATE` data in the Google Cloud SQL database.
+
+5.  **Database Response & Sanitization (Server-Side)**: The database returns the newly created or updated product row. This raw data is passed to a central sanitization function in `src/lib/sanitize.ts`. **This is a critical step.** This function ensures the data conforms perfectly to the `Product` TypeScript type, converting any `null` values from the database (for empty arrays like `images` or `specifications`) into empty arrays (`[]`).
+
+6.  **API Response to Client**: The now clean, sanitized product data is sent back to the client as the JSON response from the API call.
+
+7.  **Client-Side Update**: The client-side `fetch` call receives the sanitized product data. It can then use this data to update the UI, such as redirecting the user to the newly created product's detail page, without fear of runtime errors from malformed data.
+
+This architecture ensures a clear separation of concerns: client components handle user interaction, API routes manage the business logic, and dedicated functions handle database communication and data integrity.
+
+---
 
 ## Project Structure
 
