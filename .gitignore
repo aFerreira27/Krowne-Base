@@ -37,3 +37,5 @@ next-env.d.ts
 
 # generated
 public/images/krowne_logo.png
+
+gCloudKey.json
