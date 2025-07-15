@@ -1,4 +1,5 @@
 import type { Product } from './types';
+import { sanitizeProduct } from './sanitize';
 
 const API_BASE_URL = '/api';
 
@@ -13,7 +14,9 @@ export async function getProductById(id: string): Promise<Product | null> {
       const errorData = await response.json().catch(() => ({ message: 'Failed to fetch product' }));
       throw new Error(errorData.details || errorData.error || 'Failed to fetch product');
     }
-    const product: Product = await response.json();
+    const rawProduct = await response.json();
+    // Sanitize the product data immediately after fetching to ensure it conforms to the Product type
+    const product = sanitizeProduct(rawProduct);
     return product;
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
@@ -22,7 +25,7 @@ export async function getProductById(id: string): Promise<Product | null> {
   }
 }
 
-export async function addProduct(productData: Omit<Product, 'id' | 'related_products'>): Promise<{ productId: string }> {
+export async function addProduct(productData: Omit<Product, 'id' | 'related_products'>): Promise<{ message: string, product: Product }> {
   const response = await fetch(`${API_BASE_URL}/products`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -33,7 +36,10 @@ export async function addProduct(productData: Omit<Product, 'id' | 'related_prod
     const errorBody = await response.json();
     throw new Error(errorBody.details || errorBody.error || 'Failed to create product');
   }
-  return response.json();
+  const result = await response.json();
+  // Also sanitize the product returned after creation
+  result.product = sanitizeProduct(result.product);
+  return result;
 }
 
 export async function updateProduct(id: string, productData: Partial<Product>): Promise<Product> {
@@ -47,5 +53,8 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
     const errorBody = await response.json();
     throw new Error(errorBody.details || errorBody.error || 'Failed to update product');
   }
-  return response.json();
+  const updatedRawProduct = await response.json();
+  // Sanitize the product returned after an update
+  const sanitizedProduct = sanitizeProduct(updatedRawProduct);
+  return sanitizedProduct;
 }

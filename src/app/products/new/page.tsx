@@ -16,7 +16,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
-import { addProduct } from '@/lib/products';
+import { addProduct } from '@/lib/products-client';
 import { seriesOptions, docTypeOptions, Product } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -195,15 +195,25 @@ export default function NewProductPage() {
     try {
         const productDataForApi = {
             ...values,
+            images: values.images?.map(img => img.url),
             description: values.description || undefined,
-            standardFeatures: values.standard_features || undefined,
-        }
-        const result = await addProduct(productDataForApi as Omit<Product, 'id' | 'relatedProducts'>);
+            standard_features: values.standard_features || undefined,
+        };
+        
+        const result = await addProduct(productDataForApi as Omit<Product, 'id' | 'related_products'>);
+
         toast({
             title: "Product Created",
             description: `${values.name} has been added to the database.`,
         });
-        router.push(`/products/${result.productId}`);
+        
+        if (result.product?.id) {
+           router.push(`/products/${result.product.id}`);
+        } else {
+           router.push('/products');
+        }
+        router.refresh();
+
     } catch (error) {
          toast({
           variant: 'destructive',

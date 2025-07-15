@@ -35,9 +35,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const productData = await request.json();
-    const result = await addProduct(productData);
+    const newProduct = await addProduct(productData);
+    const sanitizedProduct = sanitizeProduct(newProduct);
 
-    return NextResponse.json({ message: 'Product created successfully', productId: result.id }, { status: 201 });
+    return NextResponse.json({ message: 'Product created successfully', product: sanitizedProduct }, { status: 201 });
   } catch (error) {
     console.error('Error creating product:', error);
     return NextResponse.json({ error: 'Failed to create product', details: (error as Error).message }, { status: 500 });
