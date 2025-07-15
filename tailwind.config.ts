@@ -95,5 +95,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('use-debounce')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 } satisfies Config;

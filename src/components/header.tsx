@@ -6,12 +6,13 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Package, BarChart2, PanelLeft } from 'lucide-react';
+import { Package, BarChart2, PanelLeft, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/products', label: 'Products', icon: Package },
   { href: '/status', label: 'Status', icon: BarChart2 },
+  { href: '/documentation', label: 'Documentation', icon: FileText },
 ];
 
 export function Header() {
