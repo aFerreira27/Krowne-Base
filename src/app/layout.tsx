@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Toaster } from '@/components/ui/toaster';
 import { MainLayout } from '@/components/main-layout';
 import './globals.css';
+import { ClientOnly } from '@/components/client-only';
 
 export const metadata: Metadata = {
   title: 'Krowne Base',
@@ -17,7 +18,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className="font-body antialiased">
-        <MainLayout>{children}</MainLayout>
+        <ClientOnly>
+          <MainLayout>{children}</MainLayout>
+        </ClientOnly>
         <Toaster />
       </body>
     </html>
