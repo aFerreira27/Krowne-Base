@@ -42,8 +42,7 @@ export function useRecentlyViewed() {
   useEffect(() => {
     if (hydrated && productIds.length > 0) {
       const fetchProducts = async () => {
-        // Since getProductById is now a server function, we can't call it here directly.
-        // We'll fetch them one by one or create a dedicated client-side batch fetcher.
+        // Since getProductById is now a client-safe function, we can call it here.
         const products: Product[] = [];
         for (const id of productIds) {
           try {
