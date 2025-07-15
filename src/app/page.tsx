@@ -4,7 +4,7 @@ import { RecentlyViewedSection } from '@/components/recently-viewed-section';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { KrowneLogo } from '@/components/icons/krowne-logo';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -13,7 +13,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
         <div className="flex items-center gap-x-4">
-          <KrowneLogo className="h-16 w-16 md:h-20 md:w-20 text-primary" />
+          <Image
+            src="/images/krowne_logo.png"
+            alt="Krowne Logo"
+            width={120}
+            height={38}
+            className="h-16 w-auto md:h-20"
+            priority
+          />
           <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tighter">
             Base
           </h1>

@@ -25,9 +25,10 @@ export function Header() {
             <Image
               src="/images/krowne_logo.png"
               alt="Krowne Logo"
-              width={100} // Adjust width as needed
-              height={32} // Adjust height as needed
+              width={100}
+              height={32}
               className="w-auto h-8"
+              priority
             />
           <span className="sr-only">Krowne Home</span>
         </Link>
@@ -58,9 +59,10 @@ export function Header() {
                 <Image
                   src="/images/krowne_logo.png"
                   alt="Krowne Logo"
-                  width={100} // Adjust width as needed
-                  height={32} // Adjust height as needed
+                  width={100}
+                  height={32}
                   className="w-auto h-8"
+                  priority
                 />
               <span className="sr-only">Krowne Home</span>
             </Link>
