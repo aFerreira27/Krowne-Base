@@ -37,7 +37,16 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
     for (const [key, value] of Object.entries(productData)) {
       if (key !== 'id') {
         fields.push(`${key} = $${fieldIndex}`);
-        if (typeof value === 'object' && value !== null) {
+        
+        // Handle TEXT[] array columns
+        if (key === 'images' || key === 'related_products') {
+          if (Array.isArray(value) && value.length > 0) {
+            values.push(value);
+          } else {
+            values.push(null); // Send null for empty arrays
+          }
+        // Handle JSONB columns
+        } else if (typeof value === 'object' && value !== null) {
           values.push(JSON.stringify(value));
         } else {
           values.push(value);
