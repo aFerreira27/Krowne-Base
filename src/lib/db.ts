@@ -6,19 +6,17 @@ const getIpType = (): IpAddressTypes =>
     ? IpAddressTypes.PRIVATE
     : IpAddressTypes.PUBLIC);
 
-let pool: Pool;
+// No global pool variable. We will create a new pool for each request
+// to ensure a fresh, authenticated connection in a serverless environment.
 
 // Establishes a connection to the database
 export const getDB = async () => {
-  if (pool) {
-    return pool;
-  }
   const connector = new Connector();
   const clientOpts = await connector.getOptions({
     instanceConnectionName: process.env.INSTANCE_CONNECTION_NAME!,
     ipType: getIpType(),
   });
-  pool = new Pool({
+  const pool = new Pool({
     ...clientOpts,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
