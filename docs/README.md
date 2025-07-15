@@ -110,7 +110,7 @@ The project follows a standard Next.js App Router structure, with clear separati
 
 ## Local Development Setup
 
-To run the application locally, you must have a `.env` file in the project root with the correct credentials for the Google Cloud SQL instance. This file is ignored by Git for security.
+To run the application locally, you must have a `.env` file in the project root with the correct credentials for the Google Cloud SQL instance. This file is ignored by Git for security. The `next.config.ts` is configured to automatically load these variables.
 
 **Example `.env` file:**
 ```bash
@@ -119,16 +119,9 @@ DB_USER="your-database-user"
 DB_PASS="your-database-password"
 DB_NAME="your-database-name"
 ```
-
-Once the `.env` file is configured, you must authenticate with Google Cloud to allow the application to connect to the database.
-
-**1. Authenticate with gcloud:**
-```bash
-npm run gcloud:auth
-```
-
-**2. Install dependencies and start the development server:**
+**1. Install dependencies and start the development server:**
 ```bash
 npm install
 npm run dev
 ```
+The application should now be running with the correct database credentials.
