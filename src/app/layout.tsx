@@ -1,4 +1,6 @@
+
 import type { Metadata } from 'next';
+import React from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { MainLayout } from '@/components/main-layout';
 import './globals.css';
@@ -14,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en">
       <head />
-      <body className="font-body antialiased">
+      <body className="font-body antialiased" suppressHydrationWarning={true}>
         <MainLayout>{children}</MainLayout>
         <Toaster />
       </body>
