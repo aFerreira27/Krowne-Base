@@ -88,7 +88,7 @@ export default async function ProductDetailPage({ params }: { params: { id:strin
         <Card>
           <CardHeader>
             <CardTitle>Standard Features</CardTitle>
-          </Header>
+          </CardHeader>
           <CardContent>
             <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
               {product.standard_features}

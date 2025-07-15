@@ -3,6 +3,14 @@
 
 This application is a comprehensive hub for managing and viewing Krowne product information. It provides a user-friendly interface for searching, viewing, creating, and editing product details, all backed by a robust cloud-based infrastructure.
 
+## Recent Updates
+
+- Addressed a hydration mismatch error by suppressing the hydration warning on the `<html>` tag in `/src/app/layout.tsx`.
+- Noted the importance of maintaining aspect ratio for images by adjusting either width or height and setting the other to `auto`. The image in question was `/public/images/krowne_logo.png`, although the general principle applies to all images.
+- Fixed a build error caused by an incorrect component name (`<Header>` instead of `<CardHeader>`) in `/src/app/products/[id]/page.tsx`.
+
+---
+
 ## Table of Contents
 1.  [Technology Stack](#technology-stack)
 2.  [Key Features](#key-features)

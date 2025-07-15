@@ -14,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <head />
-      <body className="font-body antialiased" suppressHydrationWarning={true}>
-        <MainLayout suppressHydrationWarning={true}>{children}</MainLayout>
+      <body className="font-body antialiased">
+        <MainLayout>{children}</MainLayout>
         <Toaster />
       </body>
     </html>
