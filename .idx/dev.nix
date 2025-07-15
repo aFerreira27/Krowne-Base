@@ -12,6 +12,8 @@
     pkgs.nixpkgs-fmt
     pkgs.git-filter-repo
     pkgs.zulu
+    pkgs.google-cloud-sql-proxy
+    pkgs.postgresql
 
     # Python 3.12 with venv support
     (pkgs.python312.withPackages (ps: [

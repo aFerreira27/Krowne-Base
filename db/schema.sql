@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS products (
     specifications JSONB,
     documentation JSONB,
     compliance JSONB,
-    related_products TEXT[],
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
