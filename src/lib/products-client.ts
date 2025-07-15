@@ -59,6 +59,18 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
   return sanitizedProduct;
 }
 
+export async function deleteProduct(id: string): Promise<{ message: string }> {
+  const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(errorBody.details || errorBody.error || 'Failed to delete product');
+  }
+  return response.json();
+}
+
 // This function calls the API to clear all products and is safe for client components.
 export async function clearProducts(): Promise<{ message: string }> {
   const response = await fetch('/api/products/all', {

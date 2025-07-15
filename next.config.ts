@@ -4,10 +4,7 @@ require('dotenv').config({ path: './.env' });
 
 const nextConfig: NextConfig = {
   experimental: {
-    // This is required to allow the Firebase Studio preview environment to access the Next.js dev server.
-    allowedDevOrigins: [
-      "9000-firebase-studio-1752465458198.cluster-2xid2zxbenc4ixa74rpk7q7fyk.cloudworkstations.dev",
-    ]
+    // Options for the experimental features in Next.js.
   },
   /* config options here */
   typescript: {

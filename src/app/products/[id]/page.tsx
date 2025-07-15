@@ -1,16 +1,15 @@
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
+import { Download, FileText, ShieldCheck } from 'lucide-react';
 import { RecentlyViewedUpdater } from '@/components/recently-viewed-updater';
 import type { Product } from '@/lib/types';
 import { getProductById } from '@/lib/products';
+import { ProductActions } from '@/components/product-actions';
 
 async function getProduct(id: string): Promise<Product | null> {
   try {
@@ -43,17 +42,8 @@ export default async function ProductDetailPage({ params }: { params: { id:strin
           <h1 className="text-3xl md:text-4xl font-bold font-headline mt-2">{product.name}</h1>
           <p className="text-lg text-muted-foreground mt-2 max-w-3xl">{product.description}</p>
         </div>
-        <div className="flex-shrink-0 flex items-center gap-2">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Download Spec Sheet
-          </Button>
-          <Link href={`/products/${product.id}/edit`} passHref>
-            <Button>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Product
-            </Button>
-          </Link>
+        <div className="flex-shrink-0 flex items-center gap-2 mt-4 md:mt-0">
+          <ProductActions product={product} />
         </div>
       </div>
 

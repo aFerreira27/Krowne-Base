@@ -24,7 +24,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base mr-4 py-2">
             <Image
               src="/images/krowne_logo.png"
-              alt="Krowne Logo"
+              alt="Krowne"
               width={100}
               height={32}
               className="w-auto h-8"

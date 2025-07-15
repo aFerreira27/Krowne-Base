@@ -15,7 +15,7 @@ export default function Home() {
         <div className="flex items-center gap-x-4">
           <Image
             src="/images/krowne_logo.png"
-            alt="Krowne Logo"
+            alt="Krowne"
             width={120}
             height={38}
             className="h-16 w-auto md:h-20"
