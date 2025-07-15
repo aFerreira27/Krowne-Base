@@ -10,12 +10,9 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
 import { RecentlyViewedUpdater } from '@/components/recently-viewed-updater';
 import type { Product } from '@/lib/types';
-import { getProductById } from '@/lib/products-client';
+import { getProductById } from '@/lib/products';
 
 async function getProduct(id: string): Promise<Product | null> {
-  // We use the client-side fetcher here, but since this is a Server Component,
-  // Next.js will automatically de-duplicate this fetch if it's called elsewhere.
-  // This could also be a direct database call in a real-world scenario if preferred.
   try {
     const product = await getProductById(id);
     return product;
@@ -62,7 +59,7 @@ export default async function ProductDetailPage({ params }: { params: { id:strin
 
       <Carousel className="w-full relative">
         <CarouselContent>
-          {product.images?.map((src, index) => (
+          {product.images?.length > 0 ? product.images?.map((src, index) => (
             <CarouselItem key={index}>
               <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted">
                 <Image
@@ -74,7 +71,13 @@ export default async function ProductDetailPage({ params }: { params: { id:strin
                 />
               </div>
             </CarouselItem>
-          ))}
+          )) : (
+             <CarouselItem>
+              <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
+                 <span className="text-muted-foreground">No Images</span>
+              </div>
+            </CarouselItem>
+          )}
         </CarouselContent>
         {product.images?.length > 1 && (
           <>

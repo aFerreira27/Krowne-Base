@@ -1,6 +1,7 @@
 import type { Product } from './types';
 import { getDB } from '@/lib/db';
 import { Pool } from 'pg';
+import { sanitizeProduct } from './sanitize';
 
 // This function interacts directly with the database to add a product.
 // It returns the raw database row. Sanitization happens at the API boundary.
@@ -69,4 +70,23 @@ export async function deleteProduct(id: string): Promise<any | null> {
     return null;
   }
   return result.rows[0];
+}
+
+// Gets a single product directly from the database.
+// This is a server-only function.
+export async function getProductById(id: string): Promise<Product | null> {
+  try {
+    const db = await getDB();
+    const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
+    
+    if (result.rows.length === 0) {
+      return null;
+    }
+    const product = sanitizeProduct(result.rows[0]);
+    return product;
+  } catch (error) {
+    console.error(`Error fetching product ${id} from DB:`, error);
+    // In a real app, you might want more sophisticated error handling or logging
+    throw new Error('Failed to fetch product from database.');
+  }
 }
