@@ -6,8 +6,9 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.nodejs_20
+    pkgs.git-filter-repo
     pkgs.zulu
-    pkgs.yarn
+    pkgs.python312Packages.pip
   ];
   # Sets environment variables in the workspace
   env = {};
