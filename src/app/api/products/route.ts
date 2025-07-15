@@ -1,3 +1,4 @@
+
 import { getDB } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
@@ -17,7 +18,18 @@ export async function GET(request: Request) {
         }
         
         const result = await db.query(selectQuery, queryParams);
-        return NextResponse.json(result.rows);
+        
+        // Sanitize product data to ensure array fields are never null
+        const sanitizedProducts = result.rows.map(product => ({
+            ...product,
+            images: product.images || [],
+            compliance: product.compliance || [],
+            related_products: product.related_products || [],
+            specifications: product.specifications || [],
+            documentation: product.documentation || [],
+        }));
+
+        return NextResponse.json(sanitizedProducts);
     } catch (error) {
         console.error('Error fetching products:', error);
         return NextResponse.json({ error: 'Failed to fetch products', details: (error as Error).message }, { status: 500 });

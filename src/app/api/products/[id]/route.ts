@@ -11,16 +11,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     const product = result.rows[0];
-    // Ensure array fields are never null
-    if (!product.images) {
-        product.images = [];
-    }
-    if (!product.compliance) {
-        product.compliance = [];
-    }
-    if (!product.related_products) {
-      product.related_products = [];
-    }
+    
+    // Ensure all array fields are never null to prevent frontend errors
+    product.images = product.images || [];
+    product.specifications = product.specifications || [];
+    product.documentation = product.documentation || [];
+    product.compliance = product.compliance || [];
+    product.related_products = product.related_products || [];
+
     return NextResponse.json(product);
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
@@ -66,16 +64,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
         
         const product = result.rows[0];
-        // Ensure array fields are never null
-        if (!product.images) {
-            product.images = [];
-        }
-        if (!product.compliance) {
-            product.compliance = [];
-        }
-        if (!product.related_products) {
-            product.related_products = [];
-        }
+
+        // Ensure all array fields are never null to prevent frontend errors
+        product.images = product.images || [];
+        product.specifications = product.specifications || [];
+        product.documentation = product.documentation || [];
+        product.compliance = product.compliance || [];
+        product.related_products = product.related_products || [];
+        
         return NextResponse.json(product);
     } catch (error) {
         console.error(`Error updating product ${id}:`, error);
