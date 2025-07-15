@@ -120,8 +120,14 @@ DB_PASS="your-database-password"
 DB_NAME="your-database-name"
 ```
 
-Once the `.env` file is configured, you can install dependencies and start the development server:
+Once the `.env` file is configured, you must authenticate with Google Cloud to allow the application to connect to the database.
 
+**1. Authenticate with gcloud:**
+```bash
+npm run gcloud:auth
+```
+
+**2. Install dependencies and start the development server:**
 ```bash
 npm install
 npm run dev
