@@ -1,45 +1,32 @@
 # To learn more about how to use Nix to configure your environment
 # see: https://firebase.google.com/docs/studio/customize-workspace
-{pkgs}: {
+{ pkgs }: {
   # Which nixpkgs channel to use.
   channel = "stable-24.11"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+
+  # Use https://search.nixos.org/packages to find packages you want to add to your environment.
   packages = [
     pkgs.nodejs_20
+    pkgs.yarn
+    pkgs.nil
+    pkgs.nixpkgs-fmt
     pkgs.git-filter-repo
     pkgs.zulu
-    pkgs.python312Packages.pip
+    pkgs.firebase-admin
+
+    # Python 3.12 with venv support
+    (pkgs.python312.withPackages (ps: [ ps.pip ]))
   ];
-  # Sets environment variables in the workspace
-  env = {};
-  # This adds a file watcher to startup the firebase emulators. The emulators will only start if
-  # a firebase.json file is written into the user's directory
-  services.firebase.emulators = {
-    detect = true;
-    projectId = "demo-app";
-    services = ["auth" "firestore"];
+
+  workspace = {
+    onCreate = {
+ default.openFiles = [ "/home/user/studio/src/app/page.tsx" ];
+    };
   };
+
+  # "vscodevim.vim"services = ["auth" "firestore"]; # This services attribute seems misplaced. It should likely be within the top-level attributes if used.
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
-    extensions = [
-      # "vscodevim.vim"
-    ];
-    workspace = {
-      onCreate = {
-        default.openFiles = [
-          "src/app/page.tsx"
-        ];
-      };
-    };
-    # Enable previews and customize configuration
-    previews = {
-      enable = true;
-      previews = {
-        web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
-          manager = "web";
-        };
-      };
-    };
+ # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    extensions = [];
   };
 }
