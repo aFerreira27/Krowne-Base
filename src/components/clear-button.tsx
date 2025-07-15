@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Trash2, Loader2 } from 'lucide-react';
+import { Trash, Loader2 } from 'lucide-react';
 import { clearProducts } from '@/lib/products-client';
 
 export function ClearButton() {
@@ -29,8 +29,8 @@ export function ClearButton() {
     try {
       await clearProducts();
       toast({
-        title: 'Database Cleared',
-        description: 'All products have been successfully deleted.',
+        title: 'Table Cleared',
+        description: 'All products have been successfully deleted from the table.',
       });
       router.refresh();
     } catch (error) {
@@ -51,16 +51,16 @@ export function ClearButton() {
            {isClearing ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
            ) : (
-            <Trash2 className="mr-2 h-4 w-4" />
+            <Trash className="mr-2 h-4 w-4" />
            )}
-          Delete
+          Clear Table
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete all products from the database.
+            This action cannot be undone. This will permanently delete all product entries from the database. The table structure will remain.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
