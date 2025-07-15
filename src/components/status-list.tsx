@@ -17,6 +17,8 @@ export function StatusList() {
   const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
+    // This code now runs only on the client, after the component has mounted.
+    // This prevents a hydration mismatch between the server-rendered and client-rendered date.
     setLastChecked(new Date());
   }, []);
 

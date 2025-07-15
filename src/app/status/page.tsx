@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusList } from '@/components/status-list';
-import { ClientOnly } from '@/components/client-only';
 
 export default function StatusPage() {
   return (
@@ -13,9 +12,7 @@ export default function StatusPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ClientOnly>
-            <StatusList />
-          </ClientOnly>
+           <StatusList />
         </CardContent>
       </Card>
     </div>
