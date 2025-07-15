@@ -70,16 +70,3 @@ export async function deleteProduct(id: string): Promise<any | null> {
   }
   return result.rows[0];
 }
-
-// This function calls the API to clear all products.
-export async function clearProducts(): Promise<{ message: string }> {
-  const response = await fetch('/api/products/all', {
-    method: 'DELETE',
-  });
-
-   if (!response.ok) {
-    const errorBody = await response.json();
-    throw new Error(errorBody.error || 'Failed to clear products');
-  }
-  return response.json();
-}

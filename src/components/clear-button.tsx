@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Trash2, Loader2 } from 'lucide-react';
-import { clearProducts } from '@/lib/products';
+import { clearProducts } from '@/lib/products-client';
 
 export function ClearButton() {
   const router = useRouter();

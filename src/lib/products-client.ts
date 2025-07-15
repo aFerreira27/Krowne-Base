@@ -58,3 +58,16 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
   const sanitizedProduct = sanitizeProduct(updatedRawProduct);
   return sanitizedProduct;
 }
+
+// This function calls the API to clear all products and is safe for client components.
+export async function clearProducts(): Promise<{ message: string }> {
+  const response = await fetch('/api/products/all', {
+    method: 'DELETE',
+  });
+
+   if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(errorBody.error || 'Failed to clear products');
+  }
+  return response.json();
+}
