@@ -72,9 +72,11 @@ export async function deleteProduct(id: string): Promise<{ message: string }> {
 }
 
 // This function calls the API to clear all products and is safe for client components.
-export async function clearProducts(): Promise<{ message: string }> {
+export async function clearProducts(password: string): Promise<{ message: string }> {
   const response = await fetch('/api/products/all', {
     method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
   });
 
    if (!response.ok) {
