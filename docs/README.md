@@ -6,14 +6,20 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 ## Recent Updates
 
 - Addressed a hydration mismatch error by suppressing the hydration warning on the `<html>` tag in `/src/app/layout.tsx`.
-- Noted the importance of maintaining aspect ratio for images by adjusting either width or height and setting the other to `auto`. The image in question was `/public/images/krowne_logo.png`, although the general principle applies to all images.
 - Fixed a build error caused by an incorrect component name (`<Header>` instead of `<CardHeader>`) in `/src/app/products/[id]/page.tsx`.
+- Noted the importance of maintaining aspect ratio for images by adjusting either width or height and setting the other to `auto`. The image in question was `/public/images/krowne_logo.png`, although the general principle applies to all images.
+- Switched from using local data files to fetching product data directly from the **Google Cloud SQL database**.
+- Updated Firebase configuration to use **Firebase App Hosting** for the Next.js backend.
+- Resolved TypeScript type errors related to the database connection and API routing by ensuring data fetched from the database is properly typed and handled.
+- Cleaned up sensitive information (like service account keys) from the Git history using `git-filter-repo`.
+- Implemented a secure and recommended method for database authentication in production using **Workload Identity Federation (WIF)** and **Application Default Credentials (ADC)**, by granting the Firebase App Hosting service account the necessary "Cloud SQL Client" IAM role. This eliminates the need for service account key files in the deployed environment.
+- Added a dedicated API route (`/src/app/api/test-db/route.ts`) to explicitly test the database connection from the deployed Firebase App Hosting backend.
 
 ---
 
 ## Table of Contents
 1.  [Technology Stack](#technology-stack)
-2.  [Key Features](#key-features)
+2.  [Deployment](#deployment)
 3.  [Data Flow: From Input to Database](#data-flow-from-input-to-database)
 4.  [Project Structure](#project-structure)
 5.  [Key Libraries & Dependencies](#key-libraries--dependencies)
@@ -37,12 +43,20 @@ The Krowne Product Hub is built with a modern, scalable, and type-safe technolog
 -   **Generative AI**: **Google Genkit** - A framework for building AI-powered features, used here for potential future integrations.
 
 ## Key Features
+- **Homepage**: A hero section with a prominent search bar and a gallery of recently viewed items.
+- **Product Database**: A searchable and filterable grid view of all products in the database.
+- **Product Detail View**: A comprehensive page displaying all product details, including images, specifications, documentation, and compliance information.
+- **Product Creation & Editing**: Robust forms for adding new products and editing existing ones, with support for image and file uploads.
+- **Database Sync Status**: A mock page indicating the synchronization status with other company databases.
 
--   **Homepage**: A hero section with a prominent search bar and a gallery of recently viewed items.
--   **Product Database**: A searchable and filterable grid view of all products in the database.
--   **Product Detail View**: A comprehensive page displaying all product details, including images, specifications, documentation, and compliance information.
--   **Product Creation & Editing**: Robust forms for adding new products and editing existing ones, with support for image and file uploads.
--   **Database Sync Status**: A mock page indicating the synchronization status with other company databases.
+## Deployment
+
+The application is deployed to Firebase Hosting and Firebase App Hosting.
+
+To deploy the application, you will need the [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already, install it globally:
+
+
+
 
 ## Data Flow: From Input to Database
 

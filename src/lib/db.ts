@@ -9,7 +9,7 @@ const getIpType = (): IpAddressTypes =>
 // No global pool variable. We will create a new pool for each request
 // to ensure a fresh, authenticated connection in a serverless environment.
 
-// Establishes a connection to the database
+// Establishes a connection to the database pool
 export const getDB = async () => {
   const connector = new Connector();
   const clientOpts = await connector.getOptions({
@@ -25,3 +25,4 @@ export const getDB = async () => {
   });
   return pool;
 };
+
