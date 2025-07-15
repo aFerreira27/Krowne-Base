@@ -1,61 +1,74 @@
 import type { Product } from './types';
 import { getDB } from '@/lib/db';
+import { Pool } from 'pg';
+import { sanitizeProduct } from './sanitize';
 
-export async function getProducts(query?: string): Promise<Product[]> {
+// Note: This function is now directly manipulating the DB, not calling fetch.
+export async function addProduct(productData: Omit<Product, 'id' | 'related_products'>): Promise<Product> {
   const db = await getDB();
-  let selectQuery = 'SELECT id, name, sku, series, description, images, specifications, documentation, standard_features, compliance, related_products FROM products';
-  const queryParams: string[] = [];
-
-  if (query) {
-    selectQuery += ' WHERE name ILIKE $1 OR sku ILIKE $1 OR description ILIKE $1';
-    queryParams.push(`%${query}%`);
-  }
-
-  const result = await db.query(selectQuery, queryParams);
-  return result.rows;
+  const result = await db.query(
+    'INSERT INTO products (name, sku, series, description, standard_features, images, specifications, documentation, compliance) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+    [
+      productData.name,
+      productData.sku,
+      productData.series,
+      productData.description || '',
+      productData.standard_features || '',
+      productData.images || [], // Ensure array
+      JSON.stringify(productData.specifications || []), // Ensure array and stringify
+      JSON.stringify(productData.documentation || []), // Ensure array and stringify
+      JSON.stringify(productData.compliance || []),   // Ensure array and stringify
+    ]
+  );
+  return sanitizeProduct(result.rows[0]);
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
+
+// Note: This function is now directly manipulating the DB, not calling fetch.
+export async function updateProduct(id: string, productData: Partial<Product>): Promise<any | null> {
+    const db = await getDB();
+
+    const fields = [];
+    const values = [];
+    let fieldIndex = 1;
+
+    for (const [key, value] of Object.entries(productData)) {
+      if (key !== 'id') {
+        fields.push(`${key} = $${fieldIndex}`);
+        if (typeof value === 'object' && value !== null) {
+          values.push(JSON.stringify(value));
+        } else {
+          values.push(value);
+        }
+        fieldIndex++;
+      }
+    }
+    
+    if (fields.length === 0) {
+        const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
+        return result.rows[0];
+    }
+    
+    values.push(id);
+    const query = `UPDATE products SET ${fields.join(', ')} WHERE id = $${fieldIndex} RETURNING *`;
+
+    const result = await db.query(query, values);
+    
+    if (result.rows.length === 0) {
+        return null;
+    }
+    return result.rows[0];
+}
+
+export async function deleteProduct(id: string): Promise<any | null> {
   const db = await getDB();
-  const result = await db.query('SELECT id, name, sku, series, description, images, specifications, documentation, standard_features, compliance, related_products FROM products WHERE id = $1', [id]);
-  
-  if (result.rows.length === 0) {
+  const result = await db.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+  if (result.rowCount === 0) {
     return null;
   }
   return result.rows[0];
 }
 
-export async function addProduct(productData: Omit<Product, 'id' | 'relatedProducts'>): Promise<{productId: string}> {
-  const response = await fetch('/api/products', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(productData),
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.json();
-    throw new Error(errorBody.error || 'Failed to create product');
-  }
-  return response.json();
-}
-
-export async function updateProduct(id: string, productData: Partial<Product>): Promise<Product> {
-    const response = await fetch(`/api/products/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productData),
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.json();
-        throw new Error(errorBody.error || 'Failed to update product');
-    }
-    return response.json();
-}
 
 export async function clearProducts(): Promise<{ message: string }> {
   const response = await fetch('/api/products/all', {

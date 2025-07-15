@@ -2,7 +2,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getProductById } from '@/lib/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,10 +9,26 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Download, Edit, FileText, ShieldCheck } from 'lucide-react';
 import { RecentlyViewedUpdater } from '@/components/recently-viewed-updater';
+import type { Product } from '@/lib/types';
+import { getProductById } from '@/lib/products-client';
 
-export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+async function getProduct(id: string): Promise<Product | null> {
+  // We use the client-side fetcher here, but since this is a Server Component,
+  // Next.js will automatically de-duplicate this fetch if it's called elsewhere.
+  // This could also be a direct database call in a real-world scenario if preferred.
+  try {
+    const product = await getProductById(id);
+    return product;
+  } catch (error) {
+    console.error("Failed to fetch product for detail page:", error);
+    return null;
+  }
+}
+
+
+export default async function ProductDetailPage({ params }: { params: { id:string } }) {
   const { id } = params;
-  const product = await getProductById(id);
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();
@@ -73,7 +88,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         <Card>
           <CardHeader>
             <CardTitle>Standard Features</CardTitle>
-          </CardHeader>
+          </Header>
           <CardContent>
             <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
               {product.standard_features}
@@ -170,4 +185,3 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
     </div>
   );
 }
-
