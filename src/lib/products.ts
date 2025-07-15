@@ -90,3 +90,28 @@ export async function getProductById(id: string): Promise<Product | null> {
     throw new Error('Failed to fetch product from database.');
   }
 }
+
+// Gets all products, with an optional search query.
+// This is a server-only function.
+export async function getProducts(query?: string): Promise<Product[]> {
+    try {
+        const db = await getDB();
+        let selectQuery = 'SELECT * FROM products';
+        const queryParams: string[] = [];
+
+        if (query) {
+            selectQuery += ' WHERE name ILIKE $1 OR sku ILIKE $1 OR description ILIKE $1';
+            queryParams.push(`%${query}%`);
+        }
+        
+        selectQuery += ' ORDER BY name';
+
+        const result = await db.query(selectQuery, queryParams);
+        const products = result.rows.map(sanitizeProduct);
+        
+        return products;
+    } catch (error) {
+        console.error('Error fetching products from DB:', error);
+        throw new Error('Failed to fetch products from database.');
+    }
+}

@@ -5,20 +5,7 @@ import { ProductSearch } from '@/components/product-search';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClearButton } from '@/components/clear-button';
-
-async function getProducts(query?: string): Promise<Product[]> {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-    const url = new URL('/api/products', baseUrl);
-    if (query) {
-        url.searchParams.append('q', query);
-    }
-    const res = await fetch(url.toString(), { cache: 'no-store' });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch products');
-    }
-    return res.json();
-}
+import { getProducts } from '@/lib/products';
 
 async function ProductList({ query }: { query: string }) {
   const products = await getProducts(query);
