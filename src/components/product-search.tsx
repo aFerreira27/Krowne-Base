@@ -26,7 +26,7 @@ export function ProductSearch() {
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
       <Input
         type="search"
-        placeholder="Search by SKU, name, or keyword..."
+        placeholder="Search by SKU, name, or tag..."
         className="pl-10 h-11 text-base border-x-0 border-t-0 border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
         defaultValue={searchParams.get('q')?.toString()}
         onChange={e => handleSearch(e.target.value)}
