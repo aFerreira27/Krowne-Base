@@ -34,14 +34,12 @@ function ProductListSkeleton() {
   );
 }
 
-export default function ProductsPage({
-  searchParams,
-}: {
+export default async function ProductsPage({ searchParams }: {
   searchParams?: {
     q?: string;
   };
 }) {
-  const query = searchParams?.q || '';
+  const { q: query = '' } = await searchParams || {};
 
   return (
     <div className="space-y-8">

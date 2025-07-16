@@ -6,7 +6,7 @@ import { apiErrorHandler } from '@/lib/apiErrorHandler';
 
 // GET a single product by ID
 export const GET = apiErrorHandler(async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+  const { id } = await params;
   const db = await getDB();
   const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
   
@@ -19,7 +19,7 @@ export const GET = apiErrorHandler(async (request: Request, { params }: { params
 
 // PUT (update) a product by ID
 export const PUT = apiErrorHandler(async (request: Request, { params }: { params: { id: string } }) => {
-    const { id } = params;
+    const { id } = await params;
     const productData = await request.json();
     const updatedProductRow = await updateProduct(id, productData);
     
@@ -33,7 +33,7 @@ export const PUT = apiErrorHandler(async (request: Request, { params }: { params
 
 // DELETE a product by ID
 export const DELETE = apiErrorHandler(async (request: Request, { params }: { params: { id: string } }) => {
-  const { id } = params;
+  const { id } = await params;
   const deletedProduct = await deleteProduct(id);
   if (!deletedProduct) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 });
