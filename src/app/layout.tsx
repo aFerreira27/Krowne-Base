@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import React from 'react';
 import { Toaster } from '@/components/ui/toaster';
@@ -17,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="icon" href="/icons/krowneBaseIcon.svg" type="image/svg+xml" />
+      </head>
       <body className="font-body antialiased">
         <MainLayout>{children}</MainLayout>
         <Toaster />

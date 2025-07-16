@@ -1,4 +1,3 @@
-
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -22,8 +21,9 @@ async function getProduct(id: string): Promise<Product | null> {
 }
 
 
-export default async function ProductDetailPage({ params }: { params: { id:string } }) {
-  const { id } = params;
+export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+  const awaitedParams = await params; // Await the params object
+  const { id } = awaitedParams; // Destructure from the awaited object
   const product = await getProduct(id);
 
   if (!product) {

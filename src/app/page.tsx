@@ -14,18 +14,19 @@ export default function Home() {
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
         <div className="flex items-center gap-x-4">
           <Image
-            src="/images/krowne_logo.png"
+            src="/images/krowneLogo.svg" alt="Krowne"
             alt="Krowne"
-            width={120}
-            height={38}
+            width={160}
+            height={50}
             className="h-16 w-auto md:h-20"
             priority
+
           />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tighter">
+          <h1 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter ml-[-8px]">
             Base
           </h1>
         </div>
-          <p className="max-w-xl text-lg text-muted-foreground">
+ <p className="max-w-xl text-base md:text-lg text-muted-foreground">
             Your central source for product information
           </p>
           <div className="w-full max-w-lg mt-4">
