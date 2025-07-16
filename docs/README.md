@@ -6,6 +6,7 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 ## Recent Updates
 
 - Addressed a hydration mismatch error by suppressing the hydration warning on the `<html>` tag in `/src/app/layout.tsx`.
+- Added support for a custom domain (`krownebase.art`) on Firebase App Hosting.
 - Fixed a build error caused by an incorrect component name (`<Header>` instead of `<CardHeader>`) in `/src/app/products/[id]/page.tsx`.
 - Noted the importance of maintaining aspect ratio for images by adjusting either width or height and setting the other to `auto`. The image in question was `/public/images/krowne_logo.png`, although the general principle applies to all images.
 - Switched from using local data files to fetching product data directly from the **Google Cloud SQL database**.
@@ -14,6 +15,7 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 - Cleaned up sensitive information (like service account keys) from the Git history using `git-filter-repo`.
 - Implemented a secure and recommended method for database authentication in production using **Workload Identity Federation (WIF)** and **Application Default Credentials (ADC)**, by granting the Firebase App Hosting service account the necessary "Cloud SQL Client" IAM role. This eliminates the need for service account key files in the deployed environment.
 - Added a dedicated API route (`/src/app/api/test-db/route.ts`) to explicitly test the database connection from the deployed Firebase App Hosting backend.
+
 
 ---
 
@@ -35,6 +37,7 @@ The Krowne Product Hub is built with a modern, scalable, and type-safe technolog
 -   **Language**: **TypeScript** - A typed superset of JavaScript that enhances code quality and developer experience by catching errors early.
 -   **UI Library**: **React** - The core library for building dynamic and interactive user interfaces.
 -   **Styling**: **Tailwind CSS** - A utility-first CSS framework for rapid and consistent UI development.
+-   **Development Environment**: **Nix** - Used to ensure a consistent and reproducible development environment across different machines.
 -   **UI Components**: **ShadCN UI** - A collection of beautifully designed, reusable, and accessible components built on top of Radix UI and Tailwind CSS.
 -   **Icons**: **Lucide React** - A simply beautiful and consistent icon library.
 -   **Database**: **PostgreSQL** - A powerful, open-source object-relational database system for storing all product data.
