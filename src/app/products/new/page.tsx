@@ -36,7 +36,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { populateFromSpecSheet } from '@/ai/flows/populate-from-spec-sheet-flow';
-import { populateFromKrowneCom } from '@/ai/flows/populate-from-krowne-com-flow';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -323,13 +322,24 @@ export default function NewProductPage() {
 
     setIsParsing('krowne');
     try {
-      const result = await populateFromKrowneCom({ sku });
+      const response = await fetch(`/api/scrape-krowne?sku=${encodeURIComponent(sku)}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to scrape data from Krowne.com');
+      }
+
+      const result = await response.json();
       
       // Populate form fields
       if (result.name) form.setValue('name', result.name, { shouldValidate: true });
-      if (result.description) form.setValue('description', result.description);
+      if (result.series) form.setValue('series', result.series, { shouldValidate: true });
+
       if (result.specifications && result.specifications.length > 0) {
-        replaceSpecs(result.specifications);
+        const currentSpecs = form.getValues('specifications');
+        const newSpecs = result.specifications.filter((newSpec: { key: string; }) => 
+          !currentSpecs.some(currentSpec => currentSpec.key.toLowerCase() === newSpec.key.toLowerCase())
+        );
+        replaceSpecs([...currentSpecs, ...newSpecs]);
       }
       
       toast({
@@ -341,7 +351,7 @@ export default function NewProductPage() {
       toast({
         variant: 'destructive',
         title: 'Error Scraping Data',
-        description: (error as Error).message || "Could not retrieve data for the given SKU.",
+        description: (error as Error).message || `Could not retrieve data for SKU: ${sku}. It may be invalid or the page may not exist.`,
       });
     } finally {
       setIsParsing(null);
@@ -884,3 +894,5 @@ export default function NewProductPage() {
     </div>
   );
 }
+
+    
