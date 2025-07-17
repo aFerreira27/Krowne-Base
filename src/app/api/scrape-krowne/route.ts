@@ -12,13 +12,18 @@ import type { ProductSpecification } from '@/lib/types';
 async function fetchAndParse(url: string): Promise<cheerio.CheerioAPI | null> {
     try {
         const response = await fetch(url, {
-            redirect: 'follow',
+            redirect: 'follow', // Ensure redirects are followed
             headers: {
+                // Use a common browser user-agent
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
             },
         });
 
         if (!response.ok) {
+            console.error(`Fetch failed for ${url} with status: ${response.status}`);
             return null; // Return null if the fetch was not successful
         }
         const html = await response.text();
@@ -39,11 +44,24 @@ export async function GET(request: Request) {
   }
 
   const directUrl = `https://krowne.com/product/${sku}/`;
+  const searchUrl = `https://krowne.com/?s=${encodeURIComponent(sku)}&post_type=product`;
 
   try {
     let $ = await fetchAndParse(directUrl);
-    
-    // If direct URL fails, try searching
+    let productUrl = directUrl;
+
+    // If direct URL fails or doesn't contain a product title, try searching
+    if (!$) {
+        const search$ = await fetchAndParse(searchUrl);
+        if (search$) {
+            const productLink = search$('.products .product a').first().attr('href');
+            if (productLink) {
+                productUrl = productLink;
+                $ = await fetchAndParse(productUrl);
+            }
+        }
+    }
+
     if (!$) {
         return NextResponse.json({ error: `Product with SKU '${sku}' not found on Krowne.com.` }, { status: 404 });
     }
@@ -51,6 +69,7 @@ export async function GET(request: Request) {
     // Extract Product Name
     const name = $('h1.product_title.entry-title').text().trim();
     
+    // Final check to ensure we landed on a valid product page
     if (!name) {
        return NextResponse.json({ error: `Product with SKU '${sku}' not found on Krowne.com.` }, { status: 404 });
     }
@@ -67,6 +86,7 @@ export async function GET(request: Request) {
         const value = $(el).find('td').text().trim();
 
         if (key && value) {
+            // Check for 'Series' specifically and match it against our known series options
             if (key.toLowerCase() === 'series' && seriesOptions.includes(value as any)) {
                  series = value as (typeof seriesOptions)[number];
             } else {
