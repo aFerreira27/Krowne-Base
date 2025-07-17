@@ -54,11 +54,11 @@ Analyze the document carefully to identify the following details:
 - **series**: Identify if the product belongs to one of the following series: ${seriesOptions.join(', ')}.
 - **description**: A concise summary or marketing overview of the product.
 - **standard_features**: A list of the product's main features. If the document has a bulleted list, preserve it.
-- **specifications**: This is the most important field. Meticulously extract all technical specifications. Pay very close attention to any tables, lists, or two-column layouts. For each row or item, extract the label as the 'key' and the corresponding data as the 'value'. For example, in a table with "Max Temperature" in the left column and "750 °F" in the right, you must extract it as {"key": "Max Temperature", "value": "750 °F"}. Extract every single key-value pair you can find.
+- **specifications**: THIS IS THE MOST IMPORTANT FIELD. Meticulously extract all technical specifications. Pay very close attention to any tables, lists, or two-column layouts. For each row or item, extract the label as the 'key' and the corresponding data as the 'value'. For example, in a table with "Max Temperature" in the left column and "750 °F" in the right, you must extract it as {"key": "Max Temperature", "value": "750 °F"}. Extract every single key-value pair you can find. It is critical that you extract all specifications from any table.
 - **tags**: From the list of available tags below, select any that are relevant to the product described in the document.
   Available Tags: ${Array.from(allTags).join(', ')}
 
-If you cannot find information for a specific field, omit it from the output. Do not guess or invent data.
+If you cannot find information for a specific field, omit it from the output. Do not guess or invent data. The highest priority is extracting all specifications into the key/value format.
 
 Spec Sheet: {{media url=specSheetPdf}}`,
 });
