@@ -12,20 +12,19 @@ export default function Home() {
       <section className="relative w-full flex items-center justify-center rounded-lg bg-card overflow-hidden py-8 md:py-12">
         <div className="absolute inset-0 bg-primary/5"></div>
         <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
-        <div className="flex items-center gap-x-2">
-          <Image
-            src="/images/krowneLogo.svg" alt="Krowne"
-            width={120}
-            height={37.5}
-            className="h-8 w-auto"
-            priority
-          />
-          <h1 className="font-headline text-base font-bold tracking-tighter ml-[-8px] self-center bg-sky-500 text-white rounded-md px-1 py-0.5">
-            Base
-          </h1>
-        </div>
-        
-        <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center px-4">
+          <div className="flex items-center gap-x-2">
+            <Image
+              src="/images/krowneLogo.svg" alt="Krowne"
+              width={120}
+              height={37.5}
+              className="h-8 w-auto"
+              priority
+            />
+            <h1 className="font-headline text-base font-bold tracking-tighter ml-[-8px] self-center bg-sky-500 text-white rounded-md px-1 py-0.5">
+              Base
+            </h1>
+          </div>
+          
           <p className="max-w-xl text-base md:text-lg text-muted-foreground">
             Your central source for product information
           </p>
