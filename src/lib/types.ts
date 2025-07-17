@@ -1,4 +1,5 @@
 
+
 export interface ProductSpecification {
   key: string;
   value: string;
@@ -14,6 +15,41 @@ export interface ProductDocumentation {
 export interface Compliance {
     name: string;
 }
+
+export const complianceGroups = {
+  "NSF": [
+    "NSF St. 61",
+    "NSF/ANSI 372",
+    "NSF/ANSI/CAN 61: Q < 1",
+    "NSF/ANSI 169"
+  ],
+  "CSA": [
+    "ASME A112.18.1/CSA B125.1",
+    "ASME A112.18.2/CSA B125.2",
+    "NSF/ANSI 372",
+    "ANSI Z21.69/CSA 6.16",
+    "ANSI Z21.24/ CSA 6.10",
+    "CSA B64.1.1-2011"
+  ],
+  "Intertek AKA ETL": [
+    "NSF St. 7",
+    "UL 471",
+    "CSA C22.2#120"
+  ],
+  "ASSE": [
+    "1001"
+  ],
+  "Massachusetts Listed": [
+    "Yes",
+    "No"
+  ],
+  "UL": [
+    "UL1951"
+  ],
+  "IAPMO": [
+    "NSF/ANSI 61"
+  ]
+};
 
 export const seriesOptions = ['-', 'Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
 

@@ -18,10 +18,10 @@ import Image from 'next/image';
 import React, { useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
-import { seriesOptions, docTypeOptions, Product, allTags } from '@/lib/types';
+import { seriesOptions, docTypeOptions, Product, allTags, complianceGroups } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -118,6 +118,8 @@ function EditProductForm({ product }: { product: Product }) {
 
   const watchedImages = form.watch('images');
   const watchedTags = form.watch('tags') || [];
+  const watchedCompliance = form.watch('compliance') || [];
+  const watchedComplianceNames = useMemo(() => watchedCompliance.map(c => c.name), [watchedCompliance]);
 
   const availableTags = useMemo(() => {
     return allTags.filter(tag => !watchedTags.includes(tag));
@@ -211,6 +213,18 @@ function EditProductForm({ product }: { product: Product }) {
       form.setValue('tags', currentTags.filter(t => t !== tag));
     }
   };
+  
+  const handleComplianceToggle = (name: string, isChecked: boolean) => {
+    if (isChecked) {
+      appendCompliance({ name });
+    } else {
+      const indexToRemove = watchedCompliance.findIndex(c => c.name === name);
+      if (indexToRemove > -1) {
+        removeCompliance(indexToRemove);
+      }
+    }
+  };
+
 
   const handleTagSelect = (tag: string) => {
     const currentTags = form.getValues('tags') || [];
@@ -511,44 +525,67 @@ function EditProductForm({ product }: { product: Product }) {
               <div>
                 <h3 className="text-lg font-medium mb-4">Compliance</h3>
                 <div className="border rounded-md p-4 space-y-4">
-                    <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
-                    <Label>Certification</Label>
-                    <div/>
+                  {complianceFields.length > 0 && (
+                    <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
+                      {complianceFields.map((field, index) => (
+                        <div key={field.id} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                           <span className="text-sm">{field.name}</span>
+                           <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeCompliance(index)}
+                            className="h-6 w-6"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  {complianceFields.map((field, index) => (
-                    <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
-                      <FormField
-                        control={form.control}
-                        name={`compliance.${index}.name`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="sr-only">Certification</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="e.g., NSF Certified" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => removeCompliance(index)}
-                        className="self-start"
-                      >
-                        <Trash className="h-4 w-4" />
+                  )}
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button type="button" variant="outline">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Compliance
                       </Button>
-                    </div>
-                  ))}
-                    <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => appendCompliance({ name: '' })}
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Compliance
-                  </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl">
+                      <DialogHeader>
+                        <DialogTitle>Select Compliance Certifications</DialogTitle>
+                        <DialogDescription>
+                          Select all applicable standards for this product.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="max-h-[60vh] overflow-y-auto p-1">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {Object.entries(complianceGroups).map(([groupName, standards]) => (
+                            <div key={groupName} className="space-y-2">
+                              <h4 className="font-semibold text-foreground">{groupName}</h4>
+                              <div className="space-y-2 pl-2">
+                                {standards.map((standard) => (
+                                  <div key={standard} className="flex items-center space-x-2">
+                                    <Checkbox
+                                      id={`compliance-${standard.replace(/[^a-zA-Z0-9]/g, '-')}`}
+                                      checked={watchedComplianceNames.includes(standard)}
+                                      onCheckedChange={(checked) => handleComplianceToggle(standard, !!checked)}
+                                    />
+                                    <label
+                                      htmlFor={`compliance-${standard.replace(/[^a-zA-Z0-9]/g, '-')}`}
+                                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                      {standard}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
