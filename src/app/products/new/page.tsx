@@ -393,8 +393,10 @@ export default function NewProductPage() {
                       </FormItem>
                     )}
                   />
-                  <div className="md:col-span-2">
-                  <FormField
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                   <FormField
                     control={form.control}
                     name="series"
                     render={({ field }) => (
@@ -416,6 +418,84 @@ export default function NewProductPage() {
                       </FormItem>
                     )}
                   />
+                   <div>
+                    <Label>Tags</Label>
+                    <div className="border rounded-md p-4 mt-2 space-y-4">
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {watchedTags.map((tag, index) => (
+                            <Badge key={`${tag}-${index}`} variant="secondary" className="pl-2 pr-1 py-1 text-sm">
+                                {tag}
+                                <button type="button" onClick={() => handleRemoveTag(index)} className="ml-1 rounded-full hover:bg-muted-foreground/20 p-0.5">
+                                    <X className="h-3 w-3" />
+                                    <span className="sr-only">Remove tag</span>
+                                </button>
+                            </Badge>
+                        ))}
+                        <Popover open={tagPopoverOpen} onOpenChange={setTagPopoverOpen}>
+                            <PopoverTrigger asChild>
+                                <Input
+                                    placeholder="Add a tag..."
+                                    className="w-40 h-8"
+                                    onFocus={() => setTagPopoverOpen(true)}
+                                />
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[200px] p-0" align="start">
+                                <Command>
+                                    <CommandInput placeholder="Find tag..." />
+                                    <CommandList>
+                                        <CommandEmpty>No tags found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {availableTags.map((tag) => (
+                                                <CommandItem
+                                                    key={tag}
+                                                    value={tag}
+                                                    onSelect={() => handleTagSelect(tag)}
+                                                >
+                                                    {tag}
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80">
+                                    <Plus className="h-4 w-4"/>
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                    <DialogTitle>Add Tags</DialogTitle>
+                                </DialogHeader>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
+                                  {allTags.map((tag) => (
+                                      <div key={tag} className="flex items-center space-x-2">
+                                          <Checkbox
+                                              id={`tag-${tag}`}
+                                              checked={watchedTags.includes(tag)}
+                                              onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
+                                          />
+                                          <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                              {tag}
+                                          </label>
+                                      </div>
+                                  ))}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                      </div>
+                      <FormField
+                          control={form.control}
+                          name="tags"
+                          render={() => (
+                              <FormItem>
+                                  <FormMessage/>
+                              </FormItem>
+                          )}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -489,87 +569,6 @@ export default function NewProductPage() {
                   </Card>
                 </div>
                 
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Tags</h3>
-                  <div className="border rounded-md p-4 space-y-4">
-                    <div className="flex flex-wrap gap-2 items-center">
-                      {watchedTags.map((tag, index) => (
-                          <Badge key={`${tag}-${index}`} variant="secondary" className="pl-2 pr-1 py-1 text-sm">
-                              {tag}
-                              <button type="button" onClick={() => handleRemoveTag(index)} className="ml-1 rounded-full hover:bg-muted-foreground/20 p-0.5">
-                                  <X className="h-3 w-3" />
-                                  <span className="sr-only">Remove tag</span>
-                              </button>
-                          </Badge>
-                      ))}
-                      <Popover open={tagPopoverOpen} onOpenChange={setTagPopoverOpen}>
-                          <PopoverTrigger asChild>
-                              <Input
-                                  placeholder="Add a tag..."
-                                  className="w-40 h-8"
-                                  onFocus={() => setTagPopoverOpen(true)}
-                              />
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[200px] p-0" align="start">
-                              <Command>
-                                  <CommandInput placeholder="Find tag..." />
-                                  <CommandList>
-                                      <CommandEmpty>No tags found.</CommandEmpty>
-                                      <CommandGroup>
-                                          {availableTags.map((tag) => (
-                                              <CommandItem
-                                                  key={tag}
-                                                  value={tag}
-                                                  onSelect={() => handleTagSelect(tag)}
-                                              >
-                                                  {tag}
-                                              </CommandItem>
-                                          ))}
-                                      </CommandGroup>
-                                  </CommandList>
-                              </Command>
-                          </PopoverContent>
-                      </Popover>
-                      <Dialog>
-                          <DialogTrigger asChild>
-                              <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80">
-                                  <Plus className="h-4 w-4"/>
-                              </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-2xl">
-                              <DialogHeader>
-                                  <DialogTitle>Add Tags</DialogTitle>
-                              </DialogHeader>
-                              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
-                                {allTags.map((tag) => (
-                                    <div key={tag} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`tag-${tag}`}
-                                            checked={watchedTags.includes(tag)}
-                                            onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
-                                        />
-                                        <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                            {tag}
-                                        </label>
-                                    </div>
-                                ))}
-                              </div>
-                          </DialogContent>
-                      </Dialog>
-                    </div>
-                    <FormField
-                        control={form.control}
-                        name="tags"
-                        render={() => (
-                            <FormItem>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                  </div>
-                </div>
-
-
                 <FormField
                   control={form.control}
                   name="description"
@@ -801,3 +800,5 @@ export default function NewProductPage() {
     </div>
   );
 }
+
+    
