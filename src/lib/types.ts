@@ -18,7 +18,7 @@ export interface Compliance {
 export const seriesOptions = ['Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
 
 export const allTags = [
-  'Plumbing', 'Sinks Faucets', 'Hand Sinks', 'Beer Systems', 'Underbar', 'Casters', 
+  'Plumbing', 'Sinks', 'Faucets', 'Hand Sinks', 'Beer Systems', 'Underbar', 'Casters', 
   'Foodservice', 'Gas Connectors', 'Air Switches', 'Alchemy', 'Bar Sinks', 'Beverage Dispensing', 
   'Parts & Accessories', 'Kits', 'Bottle Coolers', 'Direct Draw Coolers', 'Dispensing Faucets', 
   'Drainboards', 'Drainers & Rinsers', 'Drains', 'Dry Storage Cabinets', 'Dump Sinks', 'Stations', 
