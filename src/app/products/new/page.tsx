@@ -99,7 +99,7 @@ export default function NewProductPage() {
     defaultValues: {
       name: '',
       sku: '',
-      series: 'Silver',
+      series: '-',
       description: '',
       standard_features: '',
       images: [],
