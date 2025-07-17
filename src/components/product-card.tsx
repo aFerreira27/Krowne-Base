@@ -37,8 +37,12 @@ export function ProductCard({ product }: ProductCardProps) {
           <CardTitle className="text-lg font-headline">{product.name}</CardTitle>
           <CardDescription className="mt-2 line-clamp-2">{product.description}</CardDescription>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-wrap gap-1">
           <Badge variant="secondary">{product.sku}</Badge>
+          {product.series && product.series !== '-' && <Badge variant="outline">{product.series}</Badge>}
+          {product.tags?.slice(0, 2).map(tag => (
+            <Badge key={tag} variant="outline" className="bg-accent/20">{tag}</Badge>
+          ))}
         </CardFooter>
       </Card>
     </Link>
