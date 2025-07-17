@@ -39,10 +39,6 @@ export const complianceGroups = {
   "ASSE": [
     "1001"
   ],
-  "Massachusetts Listed": [
-    "Yes",
-    "No"
-  ],
   "UL": [
     "UL1951"
   ],
