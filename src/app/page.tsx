@@ -11,7 +11,7 @@ export default function Home() {
     <div className="max-w-7xl mx-auto w-full flex flex-col gap-4 md:gap-6 lg:gap-8">
       <section className="relative h-[40vh] min-h-[150px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden">
         <div className="absolute inset-0 bg-primary/5"></div>
-        <div className="relative z-10 flex flex-col items-center justify-end gap-4 text-center px-4 pb-8">
+        <div className="relative z-10 flex flex-col items-center justify-end gap-4 text-center px-4 pb-2">
         <div className="flex items-center gap-x-2">
           <Image
             src="/images/krowneLogo.svg" alt="Krowne"
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       </section>
       
-      <hr className="my-8" /> {/* Added horizontal line */}
+      <hr className="my-1" /> {/* Added horizontal line */}
 
       <div className="flex justify-center">
         <Link href="/products/new" passHref>
