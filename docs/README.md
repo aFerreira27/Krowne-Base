@@ -25,13 +25,9 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 - **Firebase Deployment Error**: Resolved a deployment error: `Could not read source directory` during Firebase App Hosting deploy. This was caused by a dangling symlink named `result` in the project root, likely created by the Nix environment or during Cloud SQL Proxy setup. The fix was to manually remove it using `rm result`.
 - **Favicon Conflict in Next.js**: Fixed an issue where the favicon wasn't displaying correctly. This was due to a conflicting file (likely `favicon.ico` or similar) in the `src/app` directory. Removing or renaming the file resolved the conflict with Next.js's automatic favicon handling.
 - **Local Development Script**: Added a `start_local.sh` script that automates launching both the Cloud SQL Proxy and the Next.js development server, streamlining local development and testing.
-- Addressed a hydration mismatch error by suppressing the hydration warning on the `<html>` tag in `/src/app/layout.tsx`.
-- Added support for a custom domain (`krownebase.art`) on Firebase App Hosting.
-- Switched from using local data files to fetching product data directly from the **Google Cloud SQL database**.
-- Updated Firebase configuration to use **Firebase App Hosting** for the Next.js backend.
-- Resolved TypeScript type errors related to the database connection and API routing by ensuring data fetched from the database is properly typed and handled.
-Implemented a secure and recommended method for database authentication in production using Application Default Credentials (ADC), by granting the Firebase App Hosting service account the necessary "Cloud SQL Client" IAM role. This eliminates the need for service account key files in the deployed environment.
-- Added a dedicated API route (`/src/app/api/test-db/route.ts`) to explicitly test the database connection from the deployed Firebase App Hosting backend.
+- **Custom Domain** Added support for a custom domain (`krownebase.art`) on Firebase App Hosting.
+- **Google Cloud SQL database** Switched from using local data files to fetching product data directly from the Google Cloud SQL database.
+- **Firebase App Hosting** Updated Firebase configuration to use Firebase App Hosting for the Next.js backend.
 
 ## Technology Stack
 
