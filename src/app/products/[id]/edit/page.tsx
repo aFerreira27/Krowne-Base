@@ -85,7 +85,7 @@ function EditProductForm({ product }: { product: Product }) {
     defaultValues: {
       name: product?.name || '',
       sku: product?.sku || '',
-      series: product?.series || 'Silver',
+      series: product?.series || '-',
       description: product?.description || '',
       standard_features: product?.standard_features || '',
       images: product?.images?.map(url => ({ url })) || [],

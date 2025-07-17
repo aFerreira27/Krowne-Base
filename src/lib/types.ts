@@ -15,7 +15,7 @@ export interface Compliance {
     name: string;
 }
 
-export const seriesOptions = ['Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
+export const seriesOptions = ['-', 'Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
 
 export const allTags = [
   'Air Switches', 'Alchemy', 'Bar Sinks', 'Beer Systems', 'Beverage Dispensing', 
