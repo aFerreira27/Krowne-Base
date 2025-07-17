@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 [debug] [2025-07-17T15:39:57.091Z] ----------------------------------------------------------------------
 [debug] [2025-07-17T15:39:57.101Z] Command:       /nix/store/rbdrkcs5kkwpalxcd7c6bnm33lk2955n-nodejs-20.19.0/bin/node /home/user/.global_modules/bin/firebase deploy --only apphosting
 [debug] [2025-07-17T15:39:57.102Z] CLI Version:   14.10.1
@@ -24,6 +25,8 @@
 [debug] [2025-07-17T15:39:58.022Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/krownebase:testIamPermissions {"permissions":["firebase.projects.get"]}
 [debug] [2025-07-17T15:39:58.023Z] [iam] error while checking permissions, command may fail: Authorization failed. This account is missing the following required permissions on project krownebase:
 =======
+=======
+>>>>>>> 796433578f871508230f7327c5f23faf07c69eac
 [debug] [2025-07-17T15:57:31.263Z] ----------------------------------------------------------------------
 [debug] [2025-07-17T15:57:31.266Z] Command:       /nix/store/rbdrkcs5kkwpalxcd7c6bnm33lk2955n-nodejs-20.19.0/bin/node /home/user/.global_modules/bin/firebase deploy --only apphosting
 [debug] [2025-07-17T15:57:31.266Z] CLI Version:   14.10.1
@@ -43,13 +46,17 @@
 [debug] [2025-07-17T15:57:31.991Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/krownebase:testIamPermissions 200
 [debug] [2025-07-17T15:57:31.992Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/krownebase:testIamPermissions {"permissions":["firebase.projects.get"]}
 [debug] [2025-07-17T15:57:31.992Z] [iam] error while checking permissions, command may fail: Authorization failed. This account is missing the following required permissions on project krownebase:
+<<<<<<< HEAD
 >>>>>>> 374d3f6 (Make the following changes:)
+=======
+>>>>>>> 796433578f871508230f7327c5f23faf07c69eac
 
   
 [info] 
 [info] === Deploying to 'krownebase'...
 [info] 
 [info] i  deploying apphosting 
+<<<<<<< HEAD
 <<<<<<< HEAD
 [debug] [2025-07-17T15:39:58.040Z] Checked if tokens are valid: true, expires at: 1752770396883
 [debug] [2025-07-17T15:39:58.040Z] Checked if tokens are valid: true, expires at: 1752770396883
@@ -452,6 +459,8 @@
 [debug] [2025-07-17T15:48:18.768Z] <<< [apiv2][status] GET https://firebaseapphosting.googleapis.com/v1beta/projects/krownebase/locations/us-central1/operations/operation-1752766801249-63a21d290069c-e02790de-db072c1a 200
 [debug] [2025-07-17T15:48:18.768Z] <<< [apiv2][body] GET https://firebaseapphosting.googleapis.com/v1beta/projects/krownebase/locations/us-central1/operations/operation-1752766801249-63a21d290069c-e02790de-db072c1a {"name":"projects/krownebase/locations/us-central1/operations/operation-1752766801249-63a21d290069c-e02790de-db072c1a","metadata":{"@type":"type.googleapis.com/google.firebase.apphosting.v1beta.OperationMetadata","createTime":"2025-07-17T15:40:01.296547826Z","target":"projects/krownebase/locations/us-central1/backends/krownebase/builds/build-2025-07-17-002","verb":"create","requestedCancellation":false,"apiVersion":"v1beta"},"done":false}
 =======
+=======
+>>>>>>> 796433578f871508230f7327c5f23faf07c69eac
 [debug] [2025-07-17T15:57:31.999Z] Checked if tokens are valid: true, expires at: 1752770396883
 [debug] [2025-07-17T15:57:31.999Z] Checked if tokens are valid: true, expires at: 1752770396883
 [debug] [2025-07-17T15:57:31.999Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/krownebase/serviceAccounts/firebase-app-hosting-compute@krownebase.iam.gserviceaccount.com:testIamPermissions [none]
@@ -618,4 +627,7 @@
 [debug] [2025-07-17T15:59:02.704Z] >>> [apiv2][query] GET https://firebaseapphosting.googleapis.com/v1beta/projects/krownebase/locations/us-central1/operations/operation-1752767854997-63a22115ef0db-54d4b68b-28f86243 [none]
 [debug] [2025-07-17T15:59:02.905Z] <<< [apiv2][status] GET https://firebaseapphosting.googleapis.com/v1beta/projects/krownebase/locations/us-central1/operations/operation-1752767854997-63a22115ef0db-54d4b68b-28f86243 200
 [debug] [2025-07-17T15:59:02.906Z] <<< [apiv2][body] GET https://firebaseapphosting.googleapis.com/v1beta/projects/krownebase/locations/us-central1/operations/operation-1752767854997-63a22115ef0db-54d4b68b-28f86243 {"name":"projects/krownebase/locations/us-central1/operations/operation-1752767854997-63a22115ef0db-54d4b68b-28f86243","metadata":{"@type":"type.googleapis.com/google.firebase.apphosting.v1beta.OperationMetadata","createTime":"2025-07-17T15:57:35.031320472Z","target":"projects/krownebase/locations/us-central1/backends/krownebase/builds/build-2025-07-17-003","verb":"create","requestedCancellation":false,"apiVersion":"v1beta"},"done":false}
+<<<<<<< HEAD
 >>>>>>> 374d3f6 (Make the following changes:)
+=======
+>>>>>>> 796433578f871508230f7327c5f23faf07c69eac
