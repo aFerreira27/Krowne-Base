@@ -10,7 +10,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { scrapeText } from '@/ai/tools/scraping-tool';
+import { scrapeTextTool } from '@/ai/tools/scraping-tool';
 
 const PopulateFromKrowneComInputSchema = z.object({
   sku: z.string().describe('The product SKU to look up on krowne.com.'),
@@ -34,22 +34,20 @@ export type PopulateFromKrowneComOutput = z.infer<typeof PopulateFromKrowneComOu
 
 const populatePrompt = ai.definePrompt({
   name: 'populateFromKrowneComPrompt',
-  input: { schema: z.object({ pageContent: z.string() }) },
+  tools: [scrapeTextTool],
+  input: { schema: PopulateFromKrowneComInputSchema },
   output: { schema: PopulateFromKrowneComOutputSchema },
-  prompt: `You are an expert data entry specialist. Your task is to extract product information from the provided HTML content of a krowne.com product page.
+  prompt: `You are an expert data entry specialist. Your task is to extract product information from a krowne.com product page.
 
-Analyze the content carefully to identify the following details:
+First, use the scrapeText tool to get the HTML content for the product with SKU '{{{sku}}}'. The URL will be 'https://krowne.com/product/{{{sku}}}/'.
+
+Then, analyze the returned HTML content carefully to identify the following details:
 
 - **name**: The primary product name or title, typically found in an <h1> tag.
 - **description**: The main product description, usually found in a div with class 'woocommerce-product-details__short-description'.
 - **specifications**: Meticulously extract all technical specifications from the 'Specifications' tab content. The specifications are usually in a table structure within a div with id 'tab-specifications'. For each row, extract the label/header as the 'key' and the corresponding data as the 'value'.
 
-If you cannot find information for a specific field, omit it from the output. Do not guess or invent data.
-
-HTML Content:
-\`\`\`html
-{{{pageContent}}}
-\`\`\`
+If you cannot find information for a specific field, omit it from the output. Do not guess or invent data. If the scraper tool fails or returns an error, do not proceed and fail gracefully.
 `,
 });
 
@@ -59,22 +57,10 @@ const populateFromKrowneComFlow = ai.defineFlow(
     inputSchema: PopulateFromKrowneComInputSchema,
     outputSchema: PopulateFromKrowneComOutputSchema,
   },
-  async ({ sku }) => {
-    const url = `https://krowne.com/product/${sku}/`;
-    
-    let pageContent;
-    try {
-        pageContent = await scrapeText(url);
-    } catch (error) {
-        if ((error as Error).message.includes('404')) {
-            throw new Error(`The SKU '${sku}' was not found on krowne.com. Please check the SKU and try again.`);
-        }
-        throw new Error(`Failed to scrape the product page for SKU '${sku}'.`);
-    }
-    
-    const { output } = await populatePrompt({ pageContent });
+  async (input) => {
+    const { output } = await populatePrompt(input);
     if (!output) {
-      throw new Error("Unable to extract data from the krowne.com page.");
+      throw new Error(`Unable to extract data from the krowne.com page for SKU '${input.sku}'. It's possible the SKU is invalid or the page structure has changed.`);
     }
     return output;
   }
