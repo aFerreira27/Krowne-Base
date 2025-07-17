@@ -19,6 +19,17 @@ import { Label } from '@/components/ui/label';
 import { addProduct } from '@/lib/products-client';
 import { seriesOptions, docTypeOptions, Product, allTags } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -263,7 +274,7 @@ export default function NewProductPage() {
 
         toast({
           title: 'Spec Sheet Processed',
-          description: `Populated form from ${file.name}.`,
+          description: `Populated form from ${file.name}. Please review for accuracy.`,
         });
       };
       reader.onerror = (error) => {
@@ -339,18 +350,32 @@ export default function NewProductPage() {
                   onChange={handleSpecSheetUpload}
                   disabled={isParsingSpecSheet}
                 />
-                <Button 
-                  type="button" 
-                  onClick={() => specSheetInputRef.current?.click()}
-                  disabled={isParsingSpecSheet}
-                >
-                  {isParsingSpecSheet ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Sparkles className="mr-2 h-4 w-4" />
-                  )}
-                  From Spec Sheet
-                </Button>
+                 <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button type="button" disabled={isParsingSpecSheet}>
+                      {isParsingSpecSheet ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Sparkles className="mr-2 h-4 w-4" />
+                      )}
+                      From Spec Sheet
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>AI Feature Notice</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This AI-powered feature is currently under development. Please double-check all auto-populated fields for accuracy before submitting.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => specSheetInputRef.current?.click()}>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </CardHeader>
             <CardContent>
