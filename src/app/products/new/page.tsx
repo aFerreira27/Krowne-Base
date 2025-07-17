@@ -569,33 +569,34 @@ export default function NewProductPage() {
                   </Card>
                 </div>
                 
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Enter a detailed product description..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="standard_features"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Standard Features</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="List the standard features of the product..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Enter a detailed product description..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="standard_features"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Standard Features</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="List the standard features of the product..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <div>
                   <h3 className="text-lg font-medium mb-4">Specifications</h3>
@@ -655,132 +656,134 @@ export default function NewProductPage() {
                   </div>
                 </div>
                 
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Documentation</h3>
-                  <div className="border rounded-md p-4 space-y-4">
-                    <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
-                      <Label>Document Type</Label>
-                      <Label>File</Label>
-                      <div/>
-                    </div>
-                    {docFields.map((field, index) => (
-                      <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
-                        <FormField
-                          control={form.control}
-                          name={`documentation.${index}.type`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="sr-only">Document Type</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select a type" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {docTypeOptions.map(option => (
-                                      <SelectItem key={option} value={option}>{option}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => docFileInputRefs.current[index]?.click()}
-                          >
-                            <Upload className="mr-2 h-4 w-4" />
-                            Upload
-                          </Button>
+                <div className="grid md:grid-cols-2 gap-8 items-start">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Documentation</h3>
+                    <div className="border rounded-md p-4 space-y-4">
+                      <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                        <Label>Document Type</Label>
+                        <Label>File</Label>
+                        <div/>
+                      </div>
+                      {docFields.map((field, index) => (
+                        <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
                           <FormField
                             control={form.control}
-                            name={`documentation.${index}.url`}
-                            render={() => (
+                            name={`documentation.${index}.type`}
+                            render={({ field }) => (
                               <FormItem>
-                                  <FormLabel className="sr-only">File</FormLabel>
-                                  <FormControl>
-                                  <input
-                                    type="file"
-                                    ref={el => {
-                                      docFileInputRefs.current[index] = el;
-                                    }}
-                                    className="hidden"
-                                    onChange={(e) => handleDocFileSelect(e, index)}
-                                  />
-                                  </FormControl>
-                                  <FormMessage />
+                                <FormLabel className="sr-only">Document Type</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select a type" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {docTypeOptions.map(option => (
+                                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                <FormMessage />
                               </FormItem>
                             )}
                           />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="w-full"
+                              onClick={() => docFileInputRefs.current[index]?.click()}
+                            >
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload
+                            </Button>
+                            <FormField
+                              control={form.control}
+                              name={`documentation.${index}.url`}
+                              render={() => (
+                                <FormItem>
+                                    <FormLabel className="sr-only">File</FormLabel>
+                                    <FormControl>
+                                    <input
+                                      type="file"
+                                      ref={el => {
+                                        docFileInputRefs.current[index] = el;
+                                      }}
+                                      className="hidden"
+                                      onChange={(e) => handleDocFileSelect(e, index)}
+                                    />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => removeDoc(index)}
+                              className="self-start"
+                          >
+                              <Trash className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Button
+                      ))}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => appendDoc({ type: 'Other', url: '' })}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Document
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Compliance</h3>
+                    <div className="border rounded-md p-4 space-y-4">
+                      <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
+                        <Label>Certification</Label>
+                        <div/>
+                      </div>
+                      {complianceFields.map((field, index) => (
+                        <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
+                          <FormField
+                            control={form.control}
+                            name={`compliance.${index}.name`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="sr-only">Certification</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="e.g., NSF Certified" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
                             type="button"
                             variant="destructive"
                             size="icon"
-                            onClick={() => removeDoc(index)}
+                            onClick={() => removeCompliance(index)}
                             className="self-start"
-                        >
+                          >
                             <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => appendDoc({ type: 'Other', url: '' })}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Document
-                    </Button>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Compliance</h3>
-                  <div className="border rounded-md p-4 space-y-4">
-                    <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
-                      <Label>Certification</Label>
-                      <div/>
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => appendCompliance({ name: '' })}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Compliance
+                      </Button>
                     </div>
-                    {complianceFields.map((field, index) => (
-                      <div key={field.id} className="grid grid-cols-[1fr_auto] gap-4 items-start">
-                        <FormField
-                          control={form.control}
-                          name={`compliance.${index}.name`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="sr-only">Certification</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="e.g., NSF Certified" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => removeCompliance(index)}
-                          className="self-start"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => appendCompliance({ name: '' })}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Compliance
-                    </Button>
                   </div>
                 </div>
               </div>
@@ -800,5 +803,7 @@ export default function NewProductPage() {
     </div>
   );
 }
+
+    
 
     
