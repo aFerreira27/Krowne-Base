@@ -34,6 +34,8 @@ export default function Home() {
         </div>
       </section>
       
+      <hr className="my-8" /> {/* Added horizontal line */}
+
       <div className="flex justify-center">
         <Link href="/products/new" passHref>
           <div className="flex flex-col items-center gap-2 cursor-pointer group">

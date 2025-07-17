@@ -114,11 +114,6 @@ export default function NewProductPage() {
     control: form.control,
     name: "compliance"
   });
-
-  const { fields: tagFields, append: appendTag, remove: removeTag, replace: replaceTags } = useFieldArray({
-      control: form.control,
-      name: "tags"
-  });
   
   const watchedImages = form.watch('images');
   const watchedTags = form.watch('tags') || [];

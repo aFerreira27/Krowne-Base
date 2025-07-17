@@ -8,6 +8,12 @@ import { getProductById } from '@/lib/products-client'; // We need a client-side
 const RECENTLY_VIEWED_KEY = 'krowne_recently_viewed';
 const MAX_RECENT_ITEMS = 5;
 
+// Basic UUID regex check
+const isUUID = (id: string) => {
+    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+    return uuidRegex.test(id);
+};
+
 export function useRecentlyViewed() {
   const [productIds, setProductIds] = useState<string[]>([]);
   const [recentlyViewedProducts, setRecentlyViewedProducts] = useState<Product[]>([]);
@@ -18,7 +24,9 @@ export function useRecentlyViewed() {
     try {
       const item = window.localStorage.getItem(RECENTLY_VIEWED_KEY);
       const ids = item ? JSON.parse(item) : [];
-      setProductIds(ids);
+      // Filter for valid UUIDs right away
+      const validIds = Array.isArray(ids) ? ids.filter(id => typeof id === 'string' && isUUID(id)) : [];
+      setProductIds(validIds);
     } catch (error) {
       console.error("Failed to parse recently viewed items from localStorage", error);
       setProductIds([]);
@@ -42,7 +50,7 @@ export function useRecentlyViewed() {
   useEffect(() => {
     if (hydrated && productIds.length > 0) {
       const fetchProducts = async () => {
-        // Since getProductById is now a client-safe function, we can call it here.
+        // The IDs are already validated, so we can proceed
         const products: Product[] = [];
         for (const id of productIds) {
           try {
@@ -64,6 +72,9 @@ export function useRecentlyViewed() {
 
 
   const addProduct = useCallback((productId: string) => {
+    // Ensure we only add valid UUIDs
+    if (!isUUID(productId)) return;
+    
     setProductIds(prevIds => {
       const newIds = [productId, ...prevIds.filter(id => id !== productId)];
       return newIds.slice(0, MAX_RECENT_ITEMS);
