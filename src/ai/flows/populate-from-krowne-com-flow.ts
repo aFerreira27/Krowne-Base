@@ -18,6 +18,7 @@ const PopulateFromKrowneComInputSchema = z.object({
 export type PopulateFromKrowneComInput = z.infer<typeof PopulateFromKrowneComInputSchema>;
 
 const PopulateFromKrowneComOutputSchema = z.object({
+  sku: z.string().describe('The product SKU found on the page. This should match the input SKU.'),
   name: z.string().describe('The full product name.'),
   description: z.string().optional().describe('The detailed product description from the page.'),
   specifications: z
@@ -43,11 +44,12 @@ First, use the scrapeText tool to get the HTML content for the product with SKU 
 
 Then, analyze the returned HTML content carefully to identify the following details:
 
+- **sku**: Find the product SKU on the page. It is CRITICAL that this matches the requested SKU '{{{sku}}}'. It's often near the product title.
 - **name**: The primary product name or title, typically found in an <h1> tag. This is a required field.
 - **description**: The main product description, usually found in a div with class 'woocommerce-product-details__short-description'.
 - **specifications**: Meticulously extract all technical specifications from the 'Specifications' tab content. The specifications are usually in a table structure within a div with id 'tab-specifications'. For each row, extract the label/header as the 'key' and the corresponding data as the 'value'.
 
-If you cannot find information for a specific field (except for name), omit it from the output. Do not guess or invent data. If the scraper tool fails or returns an error, do not proceed and fail gracefully.
+If you cannot find information for a specific field (except for name and sku), omit it from the output. Do not guess or invent data. If the scraper tool fails or returns an error, do not proceed and fail gracefully.
 `,
 });
 
@@ -59,9 +61,15 @@ const populateFromKrowneComFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await populatePrompt(input);
-    if (!output || !output.name) {
+    if (!output || !output.name || !output.sku) {
       throw new Error(`Unable to extract data from the krowne.com page for SKU '${input.sku}'. It's possible the SKU is invalid or the page structure has changed.`);
     }
+
+    // Final validation to prevent AI hallucination
+    if (output.sku.trim().toUpperCase() !== input.sku.trim().toUpperCase()) {
+      throw new Error(`AI failed to extract the correct data. The returned SKU '${output.sku}' does not match the requested SKU '${input.sku}'.`);
+    }
+
     return output;
   }
 );
