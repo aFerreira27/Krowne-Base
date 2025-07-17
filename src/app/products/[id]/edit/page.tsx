@@ -85,7 +85,7 @@ function EditProductForm({ product }: { product: Product }) {
     defaultValues: {
       name: product?.name || '',
       sku: product?.sku || '',
-      series: product?.series || '-',
+      series: product?.series || 'Silver',
       description: product?.description || '',
       standard_features: product?.standard_features || '',
       images: product?.images?.map(url => ({ url })) || [],
@@ -364,7 +364,7 @@ function EditProductForm({ product }: { product: Product }) {
                                     data-ai-hint="product photo"
                                   />
                                 ) : (
-                                    <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
+                                    <div className="w-full h-full bg-background rounded-md border flex items-center justify-center">
                                     <span className="text-xs text-muted-foreground">Invalid URL</span>
                                     </div>
                                 )}

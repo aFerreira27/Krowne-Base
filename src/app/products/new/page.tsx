@@ -99,7 +99,7 @@ export default function NewProductPage() {
     defaultValues: {
       name: '',
       sku: '',
-      series: '-',
+      series: 'Silver',
       description: '',
       standard_features: '',
       images: [],
@@ -350,32 +350,14 @@ export default function NewProductPage() {
                   onChange={handleSpecSheetUpload}
                   disabled={isParsingSpecSheet}
                 />
-                 <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button type="button" disabled={isParsingSpecSheet}>
-                      {isParsingSpecSheet ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Sparkles className="mr-2 h-4 w-4" />
-                      )}
-                      From Spec Sheet
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>AI Feature Notice</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This AI-powered feature is currently under development. Please double-check all auto-populated fields for accuracy before submitting.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => specSheetInputRef.current?.click()}>
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                 <Button type="button" onClick={() => specSheetInputRef.current?.click()} disabled={isParsingSpecSheet}>
+                  {isParsingSpecSheet ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-4 w-4" />
+                  )}
+                  From Spec Sheet
+                </Button>
               </div>
             </CardHeader>
             <CardContent>
@@ -481,7 +463,7 @@ export default function NewProductPage() {
                                       data-ai-hint="product photo"
                                     />
                                   ) : (
-                                    <div className="w-full h-full bg-muted rounded-md border flex items-center justify-center">
+                                    <div className="w-full h-full bg-background rounded-md border flex items-center justify-center">
                                       <span className="text-xs text-muted-foreground">Invalid URL</span>
                                     </div>
                                   )}

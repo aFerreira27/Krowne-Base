@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link href={`/products/${product.id}`} className="group block">
       <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-1">
         <CardHeader>
-          <div className="aspect-video relative w-full overflow-hidden rounded-md bg-muted">
+          <div className="aspect-video relative w-full overflow-hidden rounded-md bg-background">
             <Image
               src={imageUrl}
               alt={product.name}
@@ -38,10 +38,10 @@ export function ProductCard({ product }: ProductCardProps) {
           <CardDescription className="mt-2 line-clamp-2">{product.description}</CardDescription>
         </CardContent>
         <CardFooter className="flex flex-wrap gap-1">
-          <Badge variant="outline" className="bg-sky-500/20 text-sky-800 border-sky-300">{product.sku}</Badge>
-          {product.series && product.series !== '-' && <Badge variant="secondary">{product.series}</Badge>}
-          {product.tags?.slice(0, 4).map(tag => (
-            <Badge key={tag} variant="outline" className="bg-accent/50">{tag}</Badge>
+          <Badge variant="secondary">{product.sku}</Badge>
+          {product.series && product.series !== '-' && <Badge variant="outline">{product.series}</Badge>}
+          {product.tags?.slice(0, 2).map(tag => (
+            <Badge key={tag} variant="outline">{tag}</Badge>
           ))}
         </CardFooter>
       </Card>

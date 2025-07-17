@@ -39,7 +39,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
             <Badge variant="secondary">{product.sku}</Badge>
             {product.series && <Badge variant="outline">{product.series}</Badge>}
             {product.tags?.map(tag => (
-              <Badge key={tag} variant="outline" className="bg-accent/50">{tag}</Badge>
+              <Badge key={tag} variant="outline">{tag}</Badge>
             ))}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold font-headline mt-2">{product.name}</h1>
@@ -54,7 +54,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         <CarouselContent>
           {product.images?.length > 0 ? product.images?.map((src, index) => (
             <CarouselItem key={index}>
-              <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted">
+              <div className="aspect-video relative overflow-hidden rounded-lg border bg-background">
                 <Image
                   src={src}
                   alt={`${product.name} image ${index + 1}`}
@@ -66,7 +66,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
             </CarouselItem>
           )) : (
              <CarouselItem>
-              <div className="aspect-video relative overflow-hidden rounded-lg border bg-muted flex items-center justify-center">
+              <div className="aspect-video relative overflow-hidden rounded-lg border bg-background flex items-center justify-center">
                  <span className="text-muted-foreground">No Images</span>
               </div>
             </CarouselItem>
@@ -165,7 +165,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
           <h2 className="text-2xl font-bold font-headline mb-4">Product Images</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {product.images.map((src, index) => (
-              <div key={index} className="aspect-square relative overflow-hidden rounded-lg border bg-muted">
+              <div key={index} className="aspect-square relative overflow-hidden rounded-lg border bg-background">
                 <Image
                   src={src}
                   alt={`${product.name} image ${index + 1}`}
