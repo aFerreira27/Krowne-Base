@@ -19,6 +19,9 @@ This application is a comprehensive hub for managing and viewing Krowne product 
 
 ## Recent Updates
 
+- **AI-Powered Data Entry**: Implemented a new feature on the "New Product" page that allows users to upload a PDF specification sheet. A Genkit AI flow parses the document and automatically populates the form fields, including name, SKU, description, specifications, and relevant product tags.
+- **Product Tagging System**: Added a comprehensive tagging system to the product schema. Users can now add, remove, and filter products by tags, improving organization and searchability.
+- **UI Enhancements**: Added an "Add Product" button directly to the product listing page for quicker access. Updated product cards to display the product series and tags.
 - **Firebase Deployment Error**: Resolved a deployment error: `Could not read source directory` during Firebase App Hosting deploy. This was caused by a dangling symlink named `result` in the project root, likely created by the Nix environment or during Cloud SQL Proxy setup. The fix was to manually remove it using `rm result`.
 - **Favicon Conflict in Next.js**: Fixed an issue where the favicon wasn't displaying correctly. This was due to a conflicting file (likely `favicon.ico` or similar) in the `src/app` directory. Removing or renaming the file resolved the conflict with Next.js's automatic favicon handling.
 - **Local Development Script**: Added a `start_local.sh` script that automates launching both the Cloud SQL Proxy and the Next.js development server, streamlining local development and testing.
@@ -48,9 +51,9 @@ The Krowne Product Hub is built with a modern, scalable, and type-safe technolog
 
 ## Key Features
 - **Homepage**: Search bar and recently viewed items
-- **Product Database**: Searchable, filterable grid view
-- **Product Detail View**: Comprehensize product page displaying info, images, specs, documents
-- **Product Creation & Editing**: Forms with image/file uploads
+- **Product Database**: Searchable, filterable grid view with product tags.
+- **Product Detail View**: Comprehensive product page displaying info, images, specs, documents.
+- **Product Creation & Editing**: Forms with image/file uploads and an **AI-powered option to auto-populate from a PDF spec sheet**.
 - **Database Sync Status**: Links and tracks sync status with other databases - to implement
 
 ## Deployment
