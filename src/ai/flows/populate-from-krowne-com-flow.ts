@@ -39,7 +39,7 @@ const populatePrompt = ai.definePrompt({
   output: { schema: PopulateFromKrowneComOutputSchema },
   prompt: `You are an expert data entry specialist. Your task is to extract product information from a krowne.com product page.
 
-First, use the scrapeText tool to get the HTML content for the product with SKU '{{{sku}}}'. The URL will be 'https://krowne.com/product/{{{sku}}}/'.
+First, use the scrapeText tool to get the HTML content for the product with SKU '{{{sku}}}'. The URL to use is 'https://krowne.com/product/{{{sku}}}/'. You must call the tool with an object like this: {"url": "THE_URL_STRING"}.
 
 Then, analyze the returned HTML content carefully to identify the following details:
 

@@ -13,10 +13,10 @@ export const scrapeTextTool = ai.defineTool(
   {
     name: 'scrapeText',
     description: 'Fetches the HTML content of a given URL. Useful for getting information from a webpage.',
-    inputSchema: z.string().url(),
+    inputSchema: z.object({ url: z.string().url() }),
     outputSchema: z.string(),
   },
-  async (url) => {
+  async ({ url }) => {
     try {
         const response = await fetch(url, {
             redirect: 'follow',
