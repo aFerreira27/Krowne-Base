@@ -62,7 +62,7 @@ export async function GET(request: Request) {
         $ = await fetchAndParse(productLink);
     } else {
         // If no product link found in search, try the direct URL as a fallback
-        const directUrl = `https://krowne.com/product/${sku}/`;
+        const directUrl = `https://krowne.com/${sku}/`;
         $ = await fetchAndParse(directUrl);
     }
 
