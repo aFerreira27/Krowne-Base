@@ -11,9 +11,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus, Upload, Loader2, X } from 'lucide-react';
+import { Trash, Plus, Upload, Loader2, X, ChevronsUpDown } from 'lucide-react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { addProduct } from '@/lib/products-client';
@@ -23,6 +23,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 
 
 const imageSchema = z.object({
@@ -77,6 +79,7 @@ export default function NewProductPage() {
   const [isDragging, setIsDragging] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const docFileInputRefs = React.useRef<(HTMLInputElement | null)[]>([]);
+  const [tagPopoverOpen, setTagPopoverOpen] = useState(false);
 
 
   const form = useForm<ProductFormData>({
@@ -117,6 +120,10 @@ export default function NewProductPage() {
   
   const watchedImages = form.watch('images');
   const watchedTags = form.watch('tags') || [];
+
+  const availableTags = useMemo(() => {
+    return allTags.filter(tag => !watchedTags.includes(tag));
+  }, [watchedTags]);
   
   const processImageFiles = (files: File[]) => {
     files.forEach(file => {
@@ -205,6 +212,15 @@ export default function NewProductPage() {
       form.setValue('tags', currentTags.filter(t => t !== tag));
     }
   };
+  
+  const handleTagSelect = (tag: string) => {
+    const currentTags = form.getValues('tags') || [];
+    if (!currentTags.includes(tag)) {
+        form.setValue('tags', [...currentTags, tag]);
+    }
+    setTagPopoverOpen(false);
+  };
+
 
   const handleRemoveTag = (index: number) => {
     const currentTags = form.getValues('tags') || [];
@@ -387,7 +403,7 @@ export default function NewProductPage() {
               <div>
                 <h3 className="text-lg font-medium mb-4">Tags</h3>
                 <div className="border rounded-md p-4 space-y-4">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 items-center">
                     {watchedTags.map((tag, index) => (
                         <Badge key={`${tag}-${index}`} variant="secondary" className="pl-2 pr-1 py-1 text-sm">
                             {tag}
@@ -397,6 +413,34 @@ export default function NewProductPage() {
                             </button>
                         </Badge>
                     ))}
+                     <Popover open={tagPopoverOpen} onOpenChange={setTagPopoverOpen}>
+                        <PopoverTrigger asChild>
+                            <Input
+                                placeholder="Add a tag..."
+                                className="w-40 h-8"
+                                onFocus={() => setTagPopoverOpen(true)}
+                            />
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0" align="start">
+                            <Command>
+                                <CommandInput placeholder="Find tag..." />
+                                <CommandList>
+                                    <CommandEmpty>No tags found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {availableTags.map((tag) => (
+                                            <CommandItem
+                                                key={tag}
+                                                value={tag}
+                                                onSelect={() => handleTagSelect(tag)}
+                                            >
+                                                {tag}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80">
