@@ -43,7 +43,7 @@ export default async function ProductsPage({ searchParams }: {
   const { q: query = '' } = await searchParams || {};
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-7xl mx-auto w-full">
       <div>
         <h1 className="text-3xl font-bold font-headline">Product Database</h1>
         <p className="text-muted-foreground mt-1">Browse and search for all available products.</p>

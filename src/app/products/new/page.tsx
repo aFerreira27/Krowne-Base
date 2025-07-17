@@ -250,7 +250,7 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto w-full">
       <Card>
         <CardHeader>
           <CardTitle>Add New Product</CardTitle>
