@@ -8,10 +8,10 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="w-full flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
-      <section className="relative h-[40vh] min-h-[250px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden">
+    <div className="max-w-7xl mx-auto w-full flex flex-col gap-4 md:gap-6 lg:gap-8">
+      <section className="relative w-full flex items-center justify-center rounded-lg bg-card overflow-hidden py-12 md:py-16">
         <div className="absolute inset-0 bg-primary/5"></div>
-        <div className="relative z-10 flex flex-col items-center justify-end gap-4 text-center px-4 pb-2">
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
         <div className="flex items-center gap-x-2">
           <Image
             src="/images/krowneLogo.svg" alt="Krowne"
