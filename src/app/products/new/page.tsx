@@ -498,76 +498,6 @@ export default function NewProductPage() {
                     </div>
                   </div>
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Product Photos</h3>
-                  <Card>
-                    <CardContent className="p-4 space-y-4">
-                      <div
-                        onClick={onDropZoneClick}
-                        onDrop={handleDrop}
-                        onDragOver={handleDragOver}
-                        onDragEnter={handleDragEnter}
-                        onDragLeave={handleDragLeave}
-                        className={cn(
-                          "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out cursor-pointer",
-                          isDragging ? "border-primary bg-accent" : "border-border hover:border-primary/50"
-                        )}
-                      >
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          multiple
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleFileSelect}
-                        />
-                        <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
-                          <Upload className="h-8 w-8" />
-                          <p className="font-medium">
-                            {isDragging ? 'Drop images here' : 'Drag & drop images, or click to select files'}
-                          </p>
-                          <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
-                        </div>
-                      </div>
-                      <FormItem>
-                        {imageFields.length > 0 && (
-                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                            {imageFields.map((field, index) => {
-                              const imageUrl = watchedImages?.[index]?.url;
-                              
-                              return (
-                                <div key={field.id} className="group relative aspect-square">
-                                  {imageUrl && isValidUrl(imageUrl) ? (
-                                    <Image
-                                      src={imageUrl}
-                                      alt={`Product image preview ${index + 1}`}
-                                      fill
-                                      className="object-cover rounded-md border"
-                                      data-ai-hint="product photo"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full bg-background rounded-md border flex items-center justify-center">
-                                      <span className="text-xs text-muted-foreground">Invalid URL</span>
-                                    </div>
-                                  )}
-                                  <button
-                                    type="button"
-                                    onClick={() => removeImage(index)}
-                                    className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                  >
-                                    <Trash className="h-3 w-3" />
-                                  </button>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                        <FormMessage />
-                      </FormItem>
-                    </CardContent>
-                  </Card>
-                </div>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <FormField
@@ -786,6 +716,77 @@ export default function NewProductPage() {
                     </div>
                   </div>
                 </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Product Photos</h3>
+                  <Card>
+                    <CardContent className="p-4 space-y-4">
+                      <div
+                        onClick={onDropZoneClick}
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        className={cn(
+                          "border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 ease-in-out cursor-pointer",
+                          isDragging ? "border-primary bg-accent" : "border-border hover:border-primary/50"
+                        )}
+                      >
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleFileSelect}
+                        />
+                        <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground pointer-events-none">
+                          <Upload className="h-8 w-8" />
+                          <p className="font-medium">
+                            {isDragging ? 'Drop images here' : 'Drag & drop images, or click to select files'}
+                          </p>
+                          <p className="text-sm">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                      </div>
+                      <FormItem>
+                        {imageFields.length > 0 && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                            {imageFields.map((field, index) => {
+                              const imageUrl = watchedImages?.[index]?.url;
+                              
+                              return (
+                                <div key={field.id} className="group relative aspect-square">
+                                  {imageUrl && isValidUrl(imageUrl) ? (
+                                    <Image
+                                      src={imageUrl}
+                                      alt={`Product image preview ${index + 1}`}
+                                      fill
+                                      className="object-cover rounded-md border"
+                                      data-ai-hint="product photo"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full bg-background rounded-md border flex items-center justify-center">
+                                      <span className="text-xs text-muted-foreground">Invalid URL</span>
+                                    </div>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => removeImage(index)}
+                                    className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <Trash className="h-3 w-3" />
+                                  </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                        <FormMessage />
+                      </FormItem>
+                    </CardContent>
+                  </Card>
+                </div>
+
               </div>
             </CardContent>
             <CardFooter>
@@ -803,7 +804,3 @@ export default function NewProductPage() {
     </div>
   );
 }
-
-    
-
-    
