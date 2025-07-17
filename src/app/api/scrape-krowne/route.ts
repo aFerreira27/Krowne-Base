@@ -43,23 +43,29 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'SKU is required' }, { status: 400 });
   }
 
-  const directUrl = `https://krowne.com/product/${sku}/`;
+  // NOTE: krowne.com has multiple URL structures.
+  // Direct: /KR-1000/
+  // Search Result: /product/kr-1000/
+  // The search -> scrape method is more reliable.
   const searchUrl = `https://krowne.com/?s=${encodeURIComponent(sku)}&post_type=product`;
 
   try {
-    let $ = await fetchAndParse(directUrl);
-    let productUrl = directUrl;
+    let $ = await fetchAndParse(searchUrl);
 
-    // If direct URL fails or doesn't contain a product title, try searching
     if (!$) {
-        const search$ = await fetchAndParse(searchUrl);
-        if (search$) {
-            const productLink = search$('.products .product a').first().attr('href');
-            if (productLink) {
-                productUrl = productLink;
-                $ = await fetchAndParse(productUrl);
-            }
-        }
+         return NextResponse.json({ error: 'Could not connect to Krowne.com to perform search.' }, { status: 502 });
+    }
+    
+    // Find the first product link in the search results
+    const productLink = $('.products .product a').first().attr('href');
+    
+    if (productLink) {
+        // Scrape the actual product page from the search result link
+        $ = await fetchAndParse(productLink);
+    } else {
+        // If no product link found in search, try the direct URL as a fallback
+        const directUrl = `https://krowne.com/${sku}/`;
+        $ = await fetchAndParse(directUrl);
     }
 
     if (!$) {
@@ -71,7 +77,7 @@ export async function GET(request: Request) {
     
     // Final check to ensure we landed on a valid product page
     if (!name) {
-       return NextResponse.json({ error: `Product with SKU '${sku}' not found on Krowne.com.` }, { status: 404 });
+       return NextResponse.json({ error: `Could not find product details for SKU '${sku}' on the page.` }, { status: 404 });
     }
 
     // Extract Description (short)
