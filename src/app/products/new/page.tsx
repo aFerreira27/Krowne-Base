@@ -36,6 +36,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { populateFromSpecSheet } from '@/ai/flows/populate-from-spec-sheet-flow';
+import { populateFromKrowneCom } from '@/ai/flows/populate-from-krowne-com-flow';
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -86,7 +87,7 @@ export default function NewProductPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isParsingSpecSheet, setIsParsingSpecSheet] = useState(false);
+  const [isParsing, setIsParsing] = useState<'spec' | 'krowne' | null>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const specSheetInputRef = useRef<HTMLInputElement>(null);
@@ -258,7 +259,7 @@ export default function NewProductPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setIsParsingSpecSheet(true);
+    setIsParsing('spec');
     try {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -301,11 +302,49 @@ export default function NewProductPage() {
         description: (error as Error).message,
       });
     } finally {
-      setIsParsingSpecSheet(false);
+      setIsParsing(null);
       // Reset file input
       if (specSheetInputRef.current) {
         specSheetInputRef.current.value = '';
       }
+    }
+  };
+
+  const handleKrowneComScrape = async () => {
+    const sku = form.getValues('sku');
+    if (!sku) {
+      toast({
+        variant: 'destructive',
+        title: 'SKU Required',
+        description: 'Please enter a SKU before scraping from Krowne.com.',
+      });
+      return;
+    }
+
+    setIsParsing('krowne');
+    try {
+      const result = await populateFromKrowneCom({ sku });
+      
+      // Populate form fields
+      if (result.name) form.setValue('name', result.name, { shouldValidate: true });
+      if (result.description) form.setValue('description', result.description);
+      if (result.specifications && result.specifications.length > 0) {
+        replaceSpecs(result.specifications);
+      }
+      
+      toast({
+        title: 'Data Scraped Successfully',
+        description: `Populated form from Krowne.com for SKU: ${sku}. Please review.`,
+      });
+
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error Scraping Data',
+        description: (error as Error).message || "Could not retrieve data for the given SKU.",
+      });
+    } finally {
+      setIsParsing(null);
     }
   };
 
@@ -362,18 +401,22 @@ export default function NewProductPage() {
                   className="hidden"
                   accept=".pdf"
                   onChange={handleSpecSheetUpload}
-                  disabled={isParsingSpecSheet}
+                  disabled={!!isParsing}
                 />
-                 <Button type="button" onClick={() => specSheetInputRef.current?.click()} disabled={isParsingSpecSheet}>
-                  {isParsingSpecSheet ? (
+                 <Button type="button" onClick={() => specSheetInputRef.current?.click()} disabled={!!isParsing}>
+                  {isParsing === 'spec' ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
                     <Sparkles className="mr-2 h-4 w-4" />
                   )}
                   From Spec Sheet
                 </Button>
-                <Button type="button">
-                  <Globe className="mr-2 h-4 w-4" />
+                <Button type="button" onClick={handleKrowneComScrape} disabled={!!isParsing}>
+                  {isParsing === 'krowne' ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Globe className="mr-2 h-4 w-4" />
+                  )}
                   From Krowne.com
                 </Button>
               </div>
@@ -696,7 +739,7 @@ export default function NewProductPage() {
                   </div>
                 </div>
 
-                <div>
+                 <div>
                   <h3 className="text-lg font-medium mb-4">Specifications</h3>
                   <div className="border rounded-md p-4 space-y-4">
                     <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
@@ -829,7 +872,7 @@ export default function NewProductPage() {
             <CardFooter>
                <div className="flex justify-end gap-2 w-full">
                 <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isSubmitting}>Cancel</Button>
-                <Button type="submit" disabled={isSubmitting || isParsingSpecSheet}>
+                <Button type="submit" disabled={isSubmitting || !!isParsing}>
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Product
                 </Button>
