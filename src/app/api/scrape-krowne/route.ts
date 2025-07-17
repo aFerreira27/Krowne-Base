@@ -7,7 +7,7 @@ import type { ProductSpecification } from '@/lib/types';
 /**
  * Fetches and parses the HTML of a given URL.
  * @param url The URL to fetch.
- * @returns A Cheerio instance of the parsed HTML, or null if fetch fails.
+ * @returns A CheerioAPI instance of the parsed HTML, or null if fetch fails.
  */
 async function fetchAndParse(url: string): Promise<cheerio.CheerioAPI | null> {
     try {
@@ -44,8 +44,6 @@ export async function GET(request: Request) {
   }
 
   // NOTE: krowne.com has multiple URL structures.
-  // Direct: /KR-1000/
-  // Search Result: /product/kr-1000/
   // The search -> scrape method is more reliable.
   const searchUrl = `https://krowne.com/?s=${encodeURIComponent(sku)}&post_type=product`;
 
@@ -64,7 +62,7 @@ export async function GET(request: Request) {
         $ = await fetchAndParse(productLink);
     } else {
         // If no product link found in search, try the direct URL as a fallback
-        const directUrl = `https://krowne.com/${sku}/`;
+        const directUrl = `https://krowne.com/product/${sku}/`;
         $ = await fetchAndParse(directUrl);
     }
 
