@@ -1,4 +1,3 @@
-
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { ProductCard } from '@/components/product-card';
@@ -58,7 +57,7 @@ export default async function ProductsPage({ searchParams }: {
         </div>
         <div className="flex items-center gap-2">
           <Link href="/products/new" passHref>
-            <Button>
+            <Button variant="success">
               <Plus className="mr-2 h-4 w-4" />
               Add Product
             </Button>
