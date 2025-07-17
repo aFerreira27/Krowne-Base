@@ -38,10 +38,10 @@ export function ProductCard({ product }: ProductCardProps) {
           <CardDescription className="mt-2 line-clamp-2">{product.description}</CardDescription>
         </CardContent>
         <CardFooter className="flex flex-wrap gap-1">
-          <Badge variant="secondary">{product.sku}</Badge>
-          {product.series && product.series !== '-' && <Badge variant="outline">{product.series}</Badge>}
-          {product.tags?.slice(0, 2).map(tag => (
-            <Badge key={tag} variant="outline">{tag}</Badge>
+          <Badge variant="secondary" className="bg-sky-500 text-black hover:bg-sky-500/80">{product.sku}</Badge>
+          {product.series && product.series !== '-' && <Badge variant="outline" className="bg-gray-200 text-black">{product.series}</Badge>}
+          {product.tags?.slice(0, 4).map(tag => (
+            <Badge key={tag} variant="outline" className="bg-gray-400 text-black">{tag}</Badge>
           ))}
         </CardFooter>
       </Card>
