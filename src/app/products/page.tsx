@@ -1,12 +1,15 @@
 
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { ProductCard } from '@/components/product-card';
 import { ProductSearch } from '@/components/product-search';
 import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { ClearButton } from '@/components/clear-button';
 import { getProducts } from '@/lib/products';
 import BackToTopButton from '@/components/back-to-top-button';
+import { Plus } from 'lucide-react';
 
 async function ProductList({ query }: { query: string }) {
   const products = await getProducts(query);
@@ -53,7 +56,15 @@ export default async function ProductsPage({ searchParams }: {
         <div className="flex-grow">
           <ProductSearch />
         </div>
-        <ClearButton />
+        <div className="flex items-center gap-2">
+          <Link href="/products/new" passHref>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Product
+            </Button>
+          </Link>
+          <ClearButton />
+        </div>
       </div>
 
       <Suspense key={query} fallback={<ProductListSkeleton />}>
