@@ -1,22 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState, ReactNode } from 'react';
-import React from 'react'; // Import React
-import MarkdownLink from './markdown-link'; // Import MarkdownLink
+import React from 'react';
+import MarkdownLink from './markdown-link';
 import ReactMarkdown from 'react-markdown';
 import HeadingElementsContext from '../contexts/heading-elements-context';
-import remarkGfm from 'remark-gfm'; // Ensure remarkGfm is imported
+import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
 
 interface MarkdownRendererWithScrollProps {
   children: string;
 }
-const MarkdownRen      contentObserver.disconnect();
-      headingObserver.disconnect();
-    };
-  }, [containerRef.current]);
-dererWithScroll: React.FC<MarkdownRendererWithScrollProps> = ({ children }) => {
+
+const MarkdownRendererWithScroll: React.FC<MarkdownRendererWithScrollProps> = ({ children }) => {
   // Ensure the console log for the children prop is present and clear
   console.log('MarkdownRendererWithScroll received children:', children ? children.substring(0, 200) + '...' : 'No children received');
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const headingElementsRef = useRef<{ [key: string]: HTMLElement }>({});
 
@@ -53,52 +52,94 @@ dererWithScroll: React.FC<MarkdownRendererWithScrollProps> = ({ children }) => {
         });
       });
 
-      contentObserver.observe(containerRef.current!, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['id']
-      });
-
-      console.log('Content MutationObserver attached to:', containerRef.current);
+      const updateHeadings = () => {
+        if (containerRef.current) {
+          const headings = containerRef.current.querySelectorAll('h1, h2, h3, h4, h5, h6');
+          const newHeadingElements: { [key: string]: HTMLElement } = {};
+          
+          console.log('Found', headings.length, 'headings in container');
+          
+          headings.forEach(heading => {
+            console.log('Processing heading:', heading.tagName, 'text:', heading.textContent?.substring(0, 50));
+            if (heading.id) {
+              console.log('Heading has ID:', heading.id);
+              newHeadingElements[heading.id] = heading as HTMLElement;
+            } else {
+              console.log('Heading has no ID, generating one');
+              // Generate ID from text content if none exists
+              const text = heading.textContent || '';
+              const id = text.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+              if (id) {
+                heading.id = id;
+                newHeadingElements[id] = heading as HTMLElement;
+                console.log('Generated ID:', id);
+              }
+            }
+          });
+          
+          // Update the ref with all current headings
+          headingElementsRef.current = newHeadingElements;
+          console.log('Updated heading elements:', Object.keys(newHeadingElements));
+        }
+      };
 
       const headingObserver = new MutationObserver((mutations) => {
         console.log('Heading MutationObserver observed mutations:', mutations);
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList' && containerRef.current) {
-          const headings = containerRef.current.querySelectorAll('h1, h2, h3, h4, h5, h6');
-          const newHeadingElements = new Map<string, HTMLElement>();
-          headings.forEach(heading => {
-            if (heading.id && !headingElementsRef.current[heading.id]) { // Check if ID exists and not already in ref
-              console.log('MutationObserver found heading:', heading.tagName, 'with ID:', heading.id);
-              newHeadingElements.set(heading.id, heading as HTMLElement);
-            }
-          });
-          // Update the ref after processing all headings in this mutation
-          headingElementsRef.current = Object.fromEntries(newHeadingElements);
+        let shouldUpdate = false;
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            shouldUpdate = true;
+          }
+        });
+        if (shouldUpdate) {
+          updateHeadings();
         }
       });
-    });
 
-    if (containerRef.current) {
- headingObserver.observe(containerRef.current, {
-        childList: true,
-        subtree: true,
-      });
- console.log('Heading MutationObserver attached to:', containerRef.current);
-    }
+      if (containerRef.current) {
+        contentObserver.observe(containerRef.current, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['id']
+        });
 
+        headingObserver.observe(containerRef.current, {
+          childList: true,
+          subtree: true,
+        });
+
+        console.log('Content MutationObserver attached to:', containerRef.current);
+        console.log('Heading MutationObserver attached to:', containerRef.current);
+        
+        // Initial heading update
+        updateHeadings();
+      }
+
+      // Store observers for cleanup
+      return () => {
+        contentObserver.disconnect();
+        headingObserver.disconnect();
+      };
+    }, 100);
 
     return () => {
-      observer.disconnect();
+      clearTimeout(timeoutId);
     };
   }, [containerRef.current]);
-
 
   return (
     <HeadingElementsContext.Provider value={headingElementsRef.current}>
       <div ref={containerRef}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MarkdownLink as any }}>
+        <ReactMarkdown 
+          remarkPlugins={[remarkGfm]} 
+          rehypePlugins={[rehypeSlug]}
+          components={{ a: MarkdownLink as any }}
+        >
           {children}
         </ReactMarkdown>
       </div>
