@@ -318,7 +318,7 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Card>
