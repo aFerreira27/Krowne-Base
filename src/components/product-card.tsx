@@ -39,9 +39,9 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardContent>
         <CardFooter className="flex flex-wrap gap-1">
           <Badge variant="outline" className="bg-sky-100 text-sky-800 border-sky-200">{product.sku}</Badge>
-          {product.series && product.series !== '-' && <Badge variant="outline" className="bg-sky-100 text-sky-800 border-sky-200">{product.series}</Badge>}
+          {product.series && product.series !== '-' && <Badge variant="secondary">{product.series}</Badge>}
           {product.tags?.slice(0, 2).map(tag => (
-            <Badge key={tag} variant="outline" className="bg-sky-100 text-sky-800 border-sky-200">{tag}</Badge>
+            <Badge key={tag} variant="secondary">{tag}</Badge>
           ))}
         </CardFooter>
       </Card>
