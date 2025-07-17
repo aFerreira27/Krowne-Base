@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import MarkdownRendererWithScroll from '@/components/markdown-renderer-with-scroll';
+import BackToTopButton from '@/components/back-to-top-button';
 
 
 export default async function DocumentationPage() {
@@ -28,6 +29,7 @@ export default async function DocumentationPage() {
         </Card>
       </div>
       <div id="test-section" style={{ marginTop: '100vh', height: '100px', backgroundColor: 'lightblue' }}>Test Section</div>
+      <BackToTopButton />
     </React.Fragment>
   );
 }

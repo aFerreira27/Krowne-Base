@@ -34,9 +34,9 @@ export function Header() {
 
   return (
     <header className={cn("sticky top-0 z-30 flex h-16 items-center justify-between bg-background px-4 md:px-6", isAtTop ? "border-transparent" : "border-b")}>
-      <div className="flex items-center gap-2">
-        {pathname !== '/' && (
-          <Link href="/products" className="flex items-center gap-2 text-lg font-semibold md:text-base">
+      <div className="flex items-center gap-2 z-30">
+        {pathname !== '/' && ( // This conditional rendering might need adjustment based on desired behavior on the home page
+          <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
             <Image
               src="/images/krowneLogo.svg"
               alt="Krowne"
@@ -49,7 +49,7 @@ export function Header() {
         </Link>
         )}
       </div>
-      <nav className="hidden md:flex absolute inset-x-0 justify-center items-center">
+      <nav className="hidden md:flex absolute inset-x-0 justify-center items-center z-20">
         <div className="flex items-center gap-5 text-sm lg:gap-6 w-full justify-center">
         {navItems.map((item) => (
           <Link

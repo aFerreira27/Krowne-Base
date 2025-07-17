@@ -6,6 +6,7 @@ import type { Product } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ClearButton } from '@/components/clear-button';
 import { getProducts } from '@/lib/products';
+import BackToTopButton from '@/components/back-to-top-button';
 
 async function ProductList({ query }: { query: string }) {
   const products = await getProducts(query);
@@ -58,6 +59,7 @@ export default async function ProductsPage({ searchParams }: {
       <Suspense key={query} fallback={<ProductListSkeleton />}>
         <ProductList query={query} />
       </Suspense>
+      <BackToTopButton />
     </div>
   );
 }

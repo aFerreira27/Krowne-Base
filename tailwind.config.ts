@@ -95,5 +95,19 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+  plugins: [
+    require('tailwindcss-animate'), 
+    require('@tailwindcss/typography'),
+    // Add the scroll offset plugin
+    function({ addBase }: { addBase: any }) {
+      addBase({
+        'html': {
+          'scroll-padding-top': '3rem',
+        },
+        'h1, h2, h3, h4, h5, h6': {
+          'scroll-margin-top': '3rem',
+        },
+      });
+    },
+  ],
 } satisfies Config;
