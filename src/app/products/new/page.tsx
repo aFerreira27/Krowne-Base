@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus, Upload, Loader2, X, ChevronsUpDown, Sparkles } from 'lucide-react';
+import { Trash, Plus, Upload, Loader2, X, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState, useMemo, useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -25,6 +25,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { populateFromSpecSheet } from '@/ai/flows/populate-from-spec-sheet-flow';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 const imageSchema = z.object({
@@ -257,6 +258,10 @@ export default function NewProductPage() {
         if (result.specifications && result.specifications.length > 0) {
           replaceSpecs(result.specifications);
         }
+        if (result.tags && result.tags.length > 0) {
+          form.setValue('tags', result.tags);
+        }
+
 
         toast({
           title: 'Form Populated',
@@ -318,7 +323,7 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Card>
@@ -529,18 +534,18 @@ export default function NewProductPage() {
                                   <DialogTitle>Add Tags</DialogTitle>
                               </DialogHeader>
                               <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
-                                  {allTags.map((tag) => (
-                                      <div key={tag} className="flex items-center space-x-2">
-                                          <Checkbox
-                                              id={`tag-${tag}`}
-                                              checked={watchedTags.includes(tag)}
-                                              onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
-                                          />
-                                          <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                              {tag}
-                                          </label>
-                                      </div>
-                                  ))}
+                                {allTags.map((tag) => (
+                                    <div key={tag} className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id={`tag-${tag}`}
+                                            checked={watchedTags.includes(tag)}
+                                            onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
+                                        />
+                                        <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                            {tag}
+                                        </label>
+                                    </div>
+                                ))}
                               </div>
                           </DialogContent>
                       </Dialog>

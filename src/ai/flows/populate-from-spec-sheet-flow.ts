@@ -10,7 +10,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { seriesOptions } from '@/lib/types';
+import { seriesOptions, allTags } from '@/lib/types';
 
 const PopulateFromSpecSheetInputSchema = z.object({
   specSheetPdf: z
@@ -35,7 +35,8 @@ const PopulateFromSpecSheetOutputSchema = z.object({
       })
     )
     .optional()
-    .describe('A list of key-value pairs representing the product\'s technical specifications.'),
+    .describe('A list of key-value pairs representing the product\'s technical specifications. Extract every key-value pair you can find, especially from tables.'),
+  tags: z.array(z.string()).optional().describe('A list of relevant tags for the product based on its content.'),
 });
 export type PopulateFromSpecSheetOutput = z.infer<typeof PopulateFromSpecSheetOutputSchema>;
 
@@ -53,7 +54,9 @@ Analyze the document carefully to identify the following details:
 - **series**: Identify if the product belongs to one of the following series: ${seriesOptions.join(', ')}.
 - **description**: A concise summary or marketing overview of the product.
 - **standard_features**: A list of the product's main features. If the document has a bulleted list, preserve it.
-- **specifications**: A list of all technical specifications. Extract every key-value pair you can find (e.g., "Width": "24 inches", "Material": "Stainless Steel").
+- **specifications**: A list of all technical specifications. Pay close attention to tables and lists. Extract every key-value pair you can find (e.g., "Width": "24 inches", "Material": "Stainless Steel").
+- **tags**: From the list of available tags below, select any that are relevant to the product described in the document.
+  Available Tags: ${Array.from(allTags).join(', ')}
 
 If you cannot find information for a specific field, omit it from the output. Do not guess or invent data.
 
