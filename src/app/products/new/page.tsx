@@ -665,9 +665,9 @@ export default function NewProductPage() {
                             </DialogDescription>
                           </DialogHeader>
                           <div className="max-h-[60vh] overflow-y-auto p-1">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                               {Object.entries(complianceGroups).map(([groupName, standards]) => (
-                                <div key={groupName} className="space-y-2">
+                                <div key={groupName} className="space-y-2 break-inside-avoid">
                                   <h4 className="font-semibold text-foreground">{groupName}</h4>
                                   <div className="space-y-2 pl-2">
                                     {standards.map((standard) => (
