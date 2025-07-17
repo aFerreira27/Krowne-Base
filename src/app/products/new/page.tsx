@@ -341,7 +341,7 @@ export default function NewProductPage() {
                 <CardTitle>Add New Product</CardTitle>
                 <CardDescription>Fill out the form below to add a new product to the database.</CardDescription>
               </div>
-              <div>
+              <div className="flex items-center gap-2">
                 <input 
                   type="file"
                   ref={specSheetInputRef}
@@ -357,6 +357,9 @@ export default function NewProductPage() {
                     <Sparkles className="mr-2 h-4 w-4" />
                   )}
                   From Spec Sheet
+                </Button>
+                <Button type="button">
+                  From Krowne.com
                 </Button>
               </div>
             </CardHeader>
@@ -797,3 +800,5 @@ export default function NewProductPage() {
     </div>
   );
 }
+
+    
