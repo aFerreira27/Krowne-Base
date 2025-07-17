@@ -333,6 +333,9 @@ export default function NewProductPage() {
       // Populate form fields
       if (result.name) form.setValue('name', result.name, { shouldValidate: true });
       if (result.series) form.setValue('series', result.series, { shouldValidate: true });
+      if (result.description && !form.getValues('description')) {
+        form.setValue('description', result.description);
+      }
 
       if (result.specifications && result.specifications.length > 0) {
         const currentSpecs = form.getValues('specifications');
@@ -680,10 +683,9 @@ export default function NewProductPage() {
                       </Button>
                     </div>
                   </div>
-
                   <div>
                     <h3 className="text-lg font-medium mb-4">Compliance</h3>
-                    <div className="border rounded-md p-4 space-y-4">
+                     <div className="border rounded-md p-4 space-y-4">
                        {complianceFields.length > 0 && (
                         <div className="space-y-2">
                           {complianceFields.map((field, index) => (
@@ -749,7 +751,7 @@ export default function NewProductPage() {
                   </div>
                 </div>
 
-                 <div>
+                <div>
                   <h3 className="text-lg font-medium mb-4">Specifications</h3>
                   <div className="border rounded-md p-4 space-y-4">
                     <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
@@ -894,5 +896,3 @@ export default function NewProductPage() {
     </div>
   );
 }
-
-    
