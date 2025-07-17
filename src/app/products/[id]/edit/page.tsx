@@ -391,12 +391,12 @@ function EditProductForm({ product }: { product: Product }) {
                                 <Plus className="h-4 w-4"/>
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-md">
+                        <DialogContent className="max-w-2xl">
                             <DialogHeader>
                                 <DialogTitle>Add Tags</DialogTitle>
                             </DialogHeader>
                             <ScrollArea className="h-72">
-                                <div className="space-y-2 p-1">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
                                     {allTags.map((tag) => (
                                         <div key={tag} className="flex items-center space-x-2">
                                             <Checkbox
