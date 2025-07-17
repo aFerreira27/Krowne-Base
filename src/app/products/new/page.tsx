@@ -20,7 +20,6 @@ import { addProduct } from '@/lib/products-client';
 import { seriesOptions, docTypeOptions, Product, allTags } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -266,7 +265,7 @@ export default function NewProductPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto w-full">
+    <div className="w-full">
       <Card>
         <CardHeader>
           <CardTitle>Add New Product</CardTitle>
@@ -451,22 +450,20 @@ export default function NewProductPage() {
                             <DialogHeader>
                                 <DialogTitle>Add Tags</DialogTitle>
                             </DialogHeader>
-                            <ScrollArea className="h-72">
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
-                                    {allTags.map((tag) => (
-                                        <div key={tag} className="flex items-center space-x-2">
-                                            <Checkbox
-                                                id={`tag-${tag}`}
-                                                checked={watchedTags.includes(tag)}
-                                                onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
-                                            />
-                                            <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                {tag}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 p-1">
+                                {allTags.map((tag) => (
+                                    <div key={tag} className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id={`tag-${tag}`}
+                                            checked={watchedTags.includes(tag)}
+                                            onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
+                                        />
+                                        <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                            {tag}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                         </DialogContent>
                     </Dialog>
                   </div>
@@ -712,3 +709,5 @@ export default function NewProductPage() {
     </div>
   );
 }
+
+    
