@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus, Upload, Loader2, X, Sparkles } from 'lucide-react';
+import { Trash, Plus, Upload, Loader2, X, Sparkles, Globe } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState, useMemo, useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -359,6 +359,7 @@ export default function NewProductPage() {
                   From Spec Sheet
                 </Button>
                 <Button type="button">
+                  <Globe className="mr-2 h-4 w-4" />
                   From Krowne.com
                 </Button>
               </div>
@@ -800,5 +801,3 @@ export default function NewProductPage() {
     </div>
   );
 }
-
-    
