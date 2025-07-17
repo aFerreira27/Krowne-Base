@@ -8,24 +8,25 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="max-w-7xl mx-auto w-full flex flex-col gap-4 md:gap-6 lg:gap-8">
-      <section className="relative h-[40vh] min-h-[150px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden">
+    <div className="w-full flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
+      <section className="relative h-[40vh] min-h-[250px] w-full flex items-center justify-center rounded-lg bg-card overflow-hidden">
         <div className="absolute inset-0 bg-primary/5"></div>
-        <div className="relative z-10 flex flex-col items-center justify-end gap-4 text-center px-4 pb-8">
-        <div className="flex items-center gap-x-2">
+        
+        <div className="absolute top-4 left-4 z-10 flex items-center gap-x-1">
           <Image
             src="/images/krowneLogo.svg" alt="Krowne"
-            width={160}
-            height={50}
-            className="h-16 w-auto md:h-20"
+            width={120}
+            height={37.5}
+            className="h-8 w-auto"
             priority
-
           />
-          <h1 className="font-headline text-2xl md:text-2xl lg:text-2xl font-bold tracking-tighter ml-[-12px] self-center bg-sky-500 text-white rounded-lg px-1 py-.5">
+          <h1 className="font-headline text-base font-bold tracking-tighter ml-[-8px] self-center bg-sky-500 text-white rounded-md px-1 py-0.5">
             Base
           </h1>
         </div>
- <p className="max-w-xl text-base md:text-lg text-muted-foreground">
+        
+        <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center px-4">
+          <p className="max-w-xl text-base md:text-lg text-muted-foreground">
             Your central source for product information
           </p>
           <div className="w-full max-w-lg mt-4">
