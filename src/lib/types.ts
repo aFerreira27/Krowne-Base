@@ -18,17 +18,18 @@ export interface Compliance {
 export const seriesOptions = ['Silver', 'Royal', 'Diamond', 'MasterTap'] as const;
 
 export const allTags = [
-  'Plumbing', 'Sinks', 'Faucets', 'Hand Sinks', 'Beer Systems', 'Underbar', 'Casters', 
-  'Foodservice', 'Gas Connectors', 'Air Switches', 'Alchemy', 'Bar Sinks', 'Beverage Dispensing', 
-  'Parts & Accessories', 'Kits', 'Bottle Coolers', 'Direct Draw Coolers', 'Dispensing Faucets', 
-  'Drainboards', 'Drainers & Rinsers', 'Drains', 'Dry Storage Cabinets', 'Dump Sinks', 'Stations', 
-  'Electric', 'Electric Sensor Faucets', 'Gas Systems', 'Glass Chiller', 'Glass Washer', 
-  'Hose Reels', 'HydroSift', 'Water Filters', 'Ice Bin', 'Home', 'Liquor Displays', 
-  'Locking Covers', 'Mixology', 'Mop Floor Sinks', 'MoveWell', 'Mug Froster', 'Freezers', 
-  'Pass Thru Units', 'Perforated Inserts', 'Pet Grooming', 'Power Packs', 'Pre-Rinse Units', 
-  'Refrigeration', 'Regulator Panels', 'Remote', 'Spouts', 'Robotic Bartenders', 'Soap Dispensers', 
-  'Soda Gun Holders', 'Specialized Stations', 'Speed Units', 'Storage Cabinets', 'Towers', 
-  'Trash Chute', 'Trunk Lines', 'Utility', 'Pot Fillers', 'Vinyl Wrap', 'Workstations'
+  'Air Switches', 'Alchemy', 'Bar Sinks', 'Beer Systems', 'Beverage Dispensing', 
+  'Bottle Coolers', 'Casters', 'Direct Draw Coolers', 'Dispensing Faucets', 'Drainboards', 
+  'Drainers & Rinsers', 'Drains', 'Dry Storage Cabinets', 'Dump Sinks', 'Electric', 
+  'Electric Sensor Faucets', 'Faucets', 'Foodservice', 'Freezers', 'Gas Connectors', 'Gas Systems', 
+  'Glass Chiller', 'Glass Washer', 'Hand Sinks', 'Home', 'Hose Reels', 'HydroSift', 
+  'Ice Bin', 'Kits', 'Liquor Displays', 'Locking Covers', 'Mixology', 
+  'Mop Floor Sinks', 'MoveWell', 'Mug Froster', 'Parts & Accessories', 'Pass Thru Units', 
+  'Perforated Inserts', 'Pet Grooming', 'Plumbing', 'Pot Fillers', 'Power Packs', 
+  'Pre-Rinse Units', 'Refrigeration', 'Regulator Panels', 'Remote', 'Robotic Bartenders', 
+  'Sinks', 'Soap Dispensers', 'Soda Gun Holders', 'Specialized Stations', 
+  'Speed Units', 'Spouts', 'Stations', 'Storage Cabinets', 'Towers', 'Trash Chute', 
+  'Trunk Lines', 'Underbar', 'Utility', 'Vinyl Wrap', 'Water Filters', 'Workstations'
 ] as const;
 
 // This type now reflects the structure of the `products` table in your database
