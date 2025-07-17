@@ -35,9 +35,12 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
        <RecentlyViewedUpdater productId={id} />
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center flex-wrap gap-2">
             <Badge variant="secondary">{product.sku}</Badge>
             {product.series && <Badge variant="outline">{product.series}</Badge>}
+            {product.tags?.map(tag => (
+              <Badge key={tag} variant="outline" className="bg-accent/50">{tag}</Badge>
+            ))}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold font-headline mt-2">{product.name}</h1>
           <p className="text-lg text-muted-foreground mt-2 max-w-3xl">{product.description}</p>

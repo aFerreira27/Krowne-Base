@@ -11,14 +11,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Trash, Plus, Upload, Loader2 } from 'lucide-react';
+import { Trash, Plus, Upload, Loader2, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { addProduct } from '@/lib/products-client';
-import { seriesOptions, docTypeOptions, Product } from '@/lib/types';
+import { seriesOptions, docTypeOptions, Product, allTags } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -48,6 +53,7 @@ const productSchema = z.object({
   specifications: z.array(specSchema),
   documentation: z.array(docSchema),
   compliance: z.array(complianceSchema),
+  tags: z.array(z.string()).optional(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -85,6 +91,7 @@ export default function NewProductPage() {
       specifications: [],
       documentation: [],
       compliance: [],
+      tags: [],
     },
   });
   
@@ -108,7 +115,13 @@ export default function NewProductPage() {
     name: "compliance"
   });
 
+  const { fields: tagFields, append: appendTag, remove: removeTag, replace: replaceTags } = useFieldArray({
+      control: form.control,
+      name: "tags"
+  });
+  
   const watchedImages = form.watch('images');
+  const watchedTags = form.watch('tags') || [];
   
   const processImageFiles = (files: File[]) => {
     files.forEach(file => {
@@ -189,6 +202,21 @@ export default function NewProductPage() {
     fileInputRef.current?.click();
   };
 
+  const handleTagToggle = (tag: string, isChecked: boolean) => {
+    const currentTags = form.getValues('tags') || [];
+    if (isChecked) {
+      form.setValue('tags', [...currentTags, tag]);
+    } else {
+      form.setValue('tags', currentTags.filter(t => t !== tag));
+    }
+  };
+
+  const handleRemoveTag = (index: number) => {
+    const currentTags = form.getValues('tags') || [];
+    currentTags.splice(index, 1);
+    form.setValue('tags', currentTags);
+  };
+
 
   async function onSubmit(values: ProductFormData) {
     setIsSubmitting(true);
@@ -198,6 +226,7 @@ export default function NewProductPage() {
             images: values.images?.map(img => img.url),
             description: values.description || undefined,
             standard_features: values.standard_features || undefined,
+            tags: values.tags || [],
         };
         
         const result = await addProduct(productDataForApi as Omit<Product, 'id' | 'related_products'>);
@@ -359,6 +388,61 @@ export default function NewProductPage() {
                   </CardContent>
                 </Card>
               </div>
+              
+              <div>
+                <h3 className="text-lg font-medium mb-4">Tags</h3>
+                <div className="border rounded-md p-4 space-y-4">
+                  <div className="flex flex-wrap gap-2">
+                    {watchedTags.map((tag, index) => (
+                        <Badge key={`${tag}-${index}`} variant="secondary" className="pl-2 pr-1 py-1 text-sm">
+                            {tag}
+                            <button type="button" onClick={() => handleRemoveTag(index)} className="ml-1 rounded-full hover:bg-muted-foreground/20 p-0.5">
+                                <X className="h-3 w-3" />
+                                <span className="sr-only">Remove tag</span>
+                            </button>
+                        </Badge>
+                    ))}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80">
+                                <Plus className="h-4 w-4"/>
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Add Tags</DialogTitle>
+                            </DialogHeader>
+                            <ScrollArea className="h-72">
+                                <div className="space-y-2 p-1">
+                                    {allTags.map((tag) => (
+                                        <div key={tag} className="flex items-center space-x-2">
+                                            <Checkbox
+                                                id={`tag-${tag}`}
+                                                checked={watchedTags.includes(tag)}
+                                                onCheckedChange={(checked) => handleTagToggle(tag, !!checked)}
+                                            />
+                                            <label htmlFor={`tag-${tag}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                {tag}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </DialogContent>
+                    </Dialog>
+                  </div>
+                  <FormField
+                      control={form.control}
+                      name="tags"
+                      render={() => (
+                          <FormItem>
+                              <FormMessage/>
+                          </FormItem>
+                      )}
+                  />
+                </div>
+              </div>
+
 
               <FormField
                 control={form.control}

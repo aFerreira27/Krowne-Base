@@ -33,7 +33,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      
       <div className="flex justify-center">
         <Link href="/products/new" passHref>
           <div className="flex flex-col items-center gap-2 cursor-pointer group">

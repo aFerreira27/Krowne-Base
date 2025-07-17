@@ -20,6 +20,7 @@ export function sanitizeProduct(row: any): Product {
       documentation: [],
       compliance: [],
       related_products: [],
+      tags: [],
     };
   }
   
@@ -38,5 +39,6 @@ export function sanitizeProduct(row: any): Product {
     documentation: Array.isArray(row.documentation) ? row.documentation : [],
     compliance: Array.isArray(row.compliance) ? row.compliance : [],
     related_products: Array.isArray(row.related_products) ? row.related_products : [],
+    tags: Array.isArray(row.tags) ? row.tags : [],
   };
 }

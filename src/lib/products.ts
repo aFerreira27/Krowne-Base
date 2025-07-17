@@ -8,7 +8,7 @@ import { sanitizeProduct } from './sanitize';
 export async function addProduct(productData: Omit<Product, 'id' | 'related_products'>): Promise<any> {
   const db = await getDB();
   const result = await db.query(
-    'INSERT INTO products (name, sku, series, description, standard_features, images, specifications, documentation, compliance) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+    'INSERT INTO products (name, sku, series, description, standard_features, images, specifications, documentation, compliance, tags) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
     [
       productData.name,
       productData.sku,
@@ -19,6 +19,7 @@ export async function addProduct(productData: Omit<Product, 'id' | 'related_prod
       productData.specifications && productData.specifications.length > 0 ? JSON.stringify(productData.specifications) : null,
       productData.documentation && productData.documentation.length > 0 ? JSON.stringify(productData.documentation) : null,
       productData.compliance && productData.compliance.length > 0 ? JSON.stringify(productData.compliance) : null,
+      productData.tags && productData.tags.length > 0 ? productData.tags : null,
     ]
   );
   return result.rows[0];
@@ -39,7 +40,7 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
         fields.push(`${key} = $${fieldIndex}`);
         
         // Handle TEXT[] array columns
-        if (key === 'images' || key === 'related_products') {
+        if (key === 'images' || key === 'related_products' || key === 'tags') {
           if (Array.isArray(value) && value.length > 0) {
             values.push(value);
           } else {
@@ -109,7 +110,17 @@ export async function getProducts(query?: string): Promise<Product[]> {
         const queryParams: string[] = [];
 
         if (query) {
-            selectQuery += ' WHERE name ILIKE $1 OR sku ILIKE $1 OR description ILIKE $1';
+            selectQuery += `
+                WHERE 
+                    name ILIKE $1 
+                    OR sku ILIKE $1 
+                    OR description ILIKE $1
+                    OR EXISTS (
+                        SELECT 1
+                        FROM unnest(tags) AS tag
+                        WHERE tag ILIKE $1
+                    )
+            `;
             queryParams.push(`%${query}%`);
         }
         
