@@ -44,6 +44,9 @@ export const complianceGroups = {
   ],
   "IAPMO": [
     "NSF/ANSI 61"
+  ],
+  "State & Local Approvals": [
+    "Massachusetts Listed"
   ]
 };
 
@@ -79,3 +82,4 @@ export interface Product {
   compliance?: Compliance[]; // JSONB
   tags?: string[]; // TEXT[]
 }
+
