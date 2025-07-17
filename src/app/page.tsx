@@ -17,7 +17,7 @@ export default function Home() {
               src="/images/krowneLogo.svg" alt="Krowne"
               width={120}
               height={37.5}
-              className="h-8 w-auto"
+              className="h-20 w-auto"
               priority
             />
             <h1 className="font-headline text-base font-bold tracking-tighter ml-[-8px] self-center bg-sky-500 text-white rounded-md px-1 py-0.5">
