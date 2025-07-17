@@ -527,64 +527,6 @@ export default function NewProductPage() {
                     )}
                   />
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Specifications</h3>
-                  <div className="border rounded-md p-4 space-y-4">
-                    <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
-                      <Label>Key</Label>
-                      <Label>Value</Label>
-                      <div/>
-                    </div>
-                    {specFields.map((field, index) => (
-                      <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
-                        <FormField
-                          control={form.control}
-                          name={`specifications.${index}.key`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="sr-only">Key</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="e.g., Width" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`specifications.${index}.value`}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="sr-only">Value</FormLabel>
-                                    <FormControl>
-                                    <Input {...field} placeholder='e.g., 84"' />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => removeSpec(index)}
-                            className="self-start"
-                        >
-                            <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => appendSpec({ key: '', value: '' })}
-                    >
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Specification
-                    </Button>
-                  </div>
-                </div>
                 
                 <div className="grid md:grid-cols-2 gap-8 items-start">
                   <div>
@@ -714,6 +656,64 @@ export default function NewProductPage() {
                         Add Compliance
                       </Button>
                     </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Specifications</h3>
+                  <div className="border rounded-md p-4 space-y-4">
+                    <div className="grid grid-cols-[1fr_1fr_auto] gap-4 items-end">
+                      <Label>Key</Label>
+                      <Label>Value</Label>
+                      <div/>
+                    </div>
+                    {specFields.map((field, index) => (
+                      <div key={field.id} className="grid grid-cols-[1fr_1fr_auto] gap-4 items-start">
+                        <FormField
+                          control={form.control}
+                          name={`specifications.${index}.key`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="sr-only">Key</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="e.g., Width" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`specifications.${index}.value`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="sr-only">Value</FormLabel>
+                                    <FormControl>
+                                    <Input {...field} placeholder='e.g., 84"' />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => removeSpec(index)}
+                            className="self-start"
+                        >
+                            <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => appendSpec({ key: '', value: '' })}
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Specification
+                    </Button>
                   </div>
                 </div>
 
