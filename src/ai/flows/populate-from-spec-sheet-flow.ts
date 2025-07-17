@@ -54,7 +54,7 @@ Analyze the document carefully to identify the following details:
 - **series**: Identify if the product belongs to one of the following series: ${seriesOptions.join(', ')}.
 - **description**: A concise summary or marketing overview of the product.
 - **standard_features**: A list of the product's main features. If the document has a bulleted list, preserve it.
-- **specifications**: A list of all technical specifications. Pay close attention to tables and lists. Extract every key-value pair you can find (e.g., "Width": "24 inches", "Material": "Stainless Steel").
+- **specifications**: This is the most important field. Meticulously extract all technical specifications. Pay very close attention to any tables, lists, or two-column layouts. For each row or item, extract the label as the 'key' and the corresponding data as the 'value'. For example, in a table with "Max Temperature" in the left column and "750 °F" in the right, you must extract it as {"key": "Max Temperature", "value": "750 °F"}. Extract every single key-value pair you can find.
 - **tags**: From the list of available tags below, select any that are relevant to the product described in the document.
   Available Tags: ${Array.from(allTags).join(', ')}
 
