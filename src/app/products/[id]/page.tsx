@@ -36,10 +36,10 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
           <div className="flex items-center flex-wrap gap-2">
-            <Badge variant="secondary">{product.sku}</Badge>
-            {product.series && <Badge variant="outline">{product.series}</Badge>}
+            <Badge variant="secondary" className="bg-sky-500 text-black hover:bg-sky-500/80">{product.sku}</Badge>
+            {product.series && <Badge variant="outline" className="bg-gray-200 text-black">{product.series}</Badge>}
             {product.tags?.map(tag => (
-              <Badge key={tag} variant="outline">{tag}</Badge>
+              <Badge key={tag} variant="outline" className="bg-gray-400 text-black">{tag}</Badge>
             ))}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold font-headline mt-2">{product.name}</h1>
