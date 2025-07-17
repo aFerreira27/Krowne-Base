@@ -25,8 +25,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { populateFromSpecSheet } from '@/ai/flows/populate-from-spec-sheet-flow';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
 
 const imageSchema = z.object({
   url: z.string().url('Must be a valid URL or Data URI'),
@@ -264,8 +262,8 @@ export default function NewProductPage() {
 
 
         toast({
-          title: 'Form Populated',
-          description: 'Product details have been extracted from the spec sheet.',
+          title: 'Spec Sheet Processed',
+          description: `Populated form from ${file.name}.`,
         });
       };
       reader.onerror = (error) => {
